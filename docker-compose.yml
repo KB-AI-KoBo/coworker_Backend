@@ -1,8 +1,6 @@
-version: '3.8'
-
 services:
   app:
-    container_name: parker-app
+    container_name: coworker-app
     image: coworker-backend:latest
     build:
       context: .
@@ -14,9 +12,8 @@ services:
       - "8080:8080"
     depends_on:
       - db
-      - redis
     networks:
-      - parker-network
+      - coworker-network
 
   db:
     container_name: coworker-mysql
@@ -34,10 +31,10 @@ services:
     volumes:
       - mysql_data:/var/lib/mysql
     networks:
-      - parker-network
+      - coworker-network
 
 networks:
-  parker-network:
+  coworker-network:
     driver: bridge
 
 volumes:
