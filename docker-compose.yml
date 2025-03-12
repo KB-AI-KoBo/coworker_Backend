@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  app:
+    container_name: parker-app
+    image: coworker-backend:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+      - redis
+    networks:
+      - parker-network
+
+  db:
+    container_name: coworker-mysql
+    image: mysql:8.0
+    restart: always
+    env_file:
+      - .env
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - parker-network
+
+networks:
+  parker-network:
+    driver: bridge
+
+volumes:
+  mysql_data:
+    driver: local

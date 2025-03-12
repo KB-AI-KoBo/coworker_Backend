@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.security.Principal;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/api/documents")
 public class DocumentController {
 
