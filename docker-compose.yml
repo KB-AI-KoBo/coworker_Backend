@@ -1,7 +1,7 @@
 services:
   app:
     container_name: coworker-app
-    image: coworker-backend:v1.0
+    image: coworker-backend:latest
     build:
       context: .
       dockerfile: Dockerfile
@@ -18,7 +18,7 @@ services:
 
   db:
     container_name: coworker-mysql
-    image: mysql:coworker
+    image: mysql:8.0
     restart: always
     env_file:
       - .env
@@ -36,7 +36,7 @@ services:
 
   redis:
     container_name: coworker-redis
-    image: redis:coworker
+    image: redis:latest
     restart: always
     ports:
       - "6380:6379"
