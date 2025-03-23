@@ -30,7 +30,7 @@ public class SwaggerConfig {
                         .bearerFormat("JWT"));
 
         return new OpenAPI()
-                .addServersItem(new Server().url("https://3.37.239.56:5050"))
+                .addServersItem(new Server().url("http://3.37.239.56:5050"))
                 .info(info)
                 .addSecurityItem(securityRequirement)
                 .components(components);
