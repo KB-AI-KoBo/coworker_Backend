@@ -85,8 +85,8 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
 
         configuration.setAllowedOriginPatterns(List.of(
-                "http://172.30.1.37:3000",
-                "https://172.30.1.37:3000",
+                "http://kobo-co.worker.s3-website-us-east-1.amazonaws.com",
+                "https://kobo-co.worker.s3-website-us-east-1.amazonaws.com",
                 "http://co-worker.store",
                 "https://co-worker.store"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
