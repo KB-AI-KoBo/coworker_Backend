@@ -87,8 +87,8 @@ public class SecurityConfig {
         configuration.setAllowedOriginPatterns(List.of(
                 "http://172.30.1.37:3000",
                 "https://172.30.1.37:3000",
-                "http://3.37.239.56:5050",
-                "https://3.37.239.56:5050"));
+                "http://co-worker.store",
+                "https://co-worker.store"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setExposedHeaders(List.of(
