@@ -1,7 +1,7 @@
 services:
   app:
     container_name: coworker-app
-    image: coworker-backend:latest
+    image: seunpark/coworker-backend:latest
     build:
       context: .
       dockerfile: Dockerfile
