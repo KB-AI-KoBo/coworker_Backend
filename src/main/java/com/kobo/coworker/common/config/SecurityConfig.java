@@ -87,8 +87,8 @@ public class SecurityConfig {
         configuration.setAllowedOriginPatterns(List.of(
                 "http://172.30.1.37:3000",
                 "https://172.30.1.37:3000",
-                "http://localhost:8080",
-                "https://localhost:8080"));
+                "http://3.37.239.56:5050",
+                "https://3.37.239.56:5050"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setExposedHeaders(List.of(
