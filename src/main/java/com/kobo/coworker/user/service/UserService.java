@@ -1,5 +1,7 @@
 package com.kobo.coworker.user.service;
 
+import com.kobo.coworker.common.apiPayload.code.status.ErrorStatus;
+import com.kobo.coworker.common.apiPayload.exception.GeneralException;
 import com.kobo.coworker.user.domain.User;
 import com.kobo.coworker.user.dto.req.UpdatedUserReqDto;
 import com.kobo.coworker.user.dto.req.UserSignupReqDto;
@@ -21,15 +23,24 @@ public class UserService {
 
     @Transactional
     public UserInfoDto signUp(UserSignupReqDto request) {
-        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
-            throw new RuntimeException("이미 존재하는 이메일입니다.");
-        }
+        validateUserByEmail(request);
 
-        User user = request.toEntity();
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
-        userRepository.save(user);
+        User user = createUserEntity(request);
+        savedUser(user);
 
         return UserInfoDto.fromEntity(user);
+    }
+
+    private void validateUserByEmail(UserSignupReqDto request) {
+        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
+            throw new GeneralException(ErrorStatus.USER_ALREADY_EXISTS);
+        }
+    }
+
+    private User createUserEntity(UserSignupReqDto request) {
+        User user = request.toEntity();
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        return user;
     }
 
     @Transactional
@@ -45,8 +56,12 @@ public class UserService {
         updateFieldIfPresent(updatedUserReqDto.getRegistrationNumber(), user::setRegistrationNumber);
         updateFieldIfPresent(updatedUserReqDto.getIndustry(), user::setIndustry);
 
-        userRepository.save(user);
+        savedUser(user);
         return UserInfoDto.fromEntity(user);
+    }
+
+    private void savedUser(User user) {
+        userRepository.save(user);
     }
 
     private void updateFieldIfPresent(String value, Consumer<String> updater) {

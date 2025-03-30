@@ -2,10 +2,12 @@ package com.kobo.coworker.user.dto.req;
 
 import com.kobo.coworker.user.domain.User;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 
 @Data
 @AllArgsConstructor
+@Builder
 public class UserSignupReqDto {
     private String username;
     private String password;

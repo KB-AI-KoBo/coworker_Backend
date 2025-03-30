@@ -1,5 +1,7 @@
 package com.kobo.coworker.user.controller;
 
+import com.kobo.coworker.common.apiPayload.ApiResponse;
+import com.kobo.coworker.common.apiPayload.code.status.SuccessStatus;
 import com.kobo.coworker.user.domain.User;
 import com.kobo.coworker.user.dto.req.UpdatedUserReqDto;
 import com.kobo.coworker.user.dto.req.UserSignupReqDto;
@@ -27,9 +29,9 @@ public class UserController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<UserInfoDto> signup(@Valid @RequestBody UserSignupReqDto userSignupReqDto) {
+    public ResponseEntity<ApiResponse<UserInfoDto>> signup(@Valid @RequestBody UserSignupReqDto userSignupReqDto) {
         UserInfoDto savedUser = userService.signUp(userSignupReqDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
+        return ResponseEntity.ok(ApiResponse.of(SuccessStatus._OK, savedUser));
     }
 
     @GetMapping("/profile")
