@@ -7,6 +7,7 @@ import com.kobo.coworker.user.fixture.TestFixture;
 import com.kobo.coworker.user.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -32,18 +33,24 @@ class UserControllerTest {
         sampleUser = TestFixture.createSampleUserSignupReqDto();
     }
 
-    @Test
-    @DisplayName("회원가입 API 테스트 - 성공케이스")
-    void setUserTest() {
-        UserSignupReqDto userSignupReqDto = sampleUser;
-        UserInfoDto userInfoDto = UserInfoDto.fromEntity(userSignupReqDto.toEntity());
+    @Nested
+    @DisplayName("회원가입 관련 컨트롤러 테스트")
+    class signUpTest {
 
-        when(service.signUp(userSignupReqDto)).thenReturn(userInfoDto);
+        @Test
+        @DisplayName("회원가입 성공 시 200 OK 및 isSuccess=true 반환")
+        void signUp_ReturnsStatus200AndSuccess() {
+            UserSignupReqDto userSignupReqDto = sampleUser;
+            UserInfoDto userInfoDto = UserInfoDto.fromEntity(userSignupReqDto.toEntity());
 
-        ResponseEntity<ApiResponse<UserInfoDto>> response = controller.signup(userSignupReqDto);
+            when(service.signUp(userSignupReqDto)).thenReturn(userInfoDto);
 
-        assertThat(response.getStatusCode().value()).isEqualTo(200);
-        assertThat(response.getBody().getIsSuccess()).isTrue();
+            ResponseEntity<ApiResponse<UserInfoDto>> response = controller.signup(userSignupReqDto);
+
+            assertThat(response.getStatusCode().value()).isEqualTo(200);
+            assertThat(response.getBody().getIsSuccess()).isTrue();
+        }
+
     }
 
 }

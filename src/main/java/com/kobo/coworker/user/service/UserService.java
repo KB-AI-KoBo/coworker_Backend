@@ -23,24 +23,32 @@ public class UserService {
 
     @Transactional
     public UserInfoDto signUp(UserSignupReqDto request) {
-        validateUserByEmail(request);
+        ensureEmailIsUnique(request);
 
-        User user = createUserEntity(request);
+        User user = buildUserWithEncodedPassword(request);
         savedUser(user);
 
         return UserInfoDto.fromEntity(user);
     }
 
-    private void validateUserByEmail(UserSignupReqDto request) {
+    private void ensureEmailIsUnique(UserSignupReqDto request) {
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
             throw new GeneralException(ErrorStatus.USER_ALREADY_EXISTS);
         }
     }
 
-    private User createUserEntity(UserSignupReqDto request) {
+    private User buildUserWithEncodedPassword(UserSignupReqDto request) {
         User user = request.toEntity();
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        return encodePassword(user, request.getPassword());
+    }
+
+    private User encodePassword(User user, String rawPassword) {
+        user.setPassword(passwordEncoder.encode(rawPassword));
         return user;
+    }
+
+    private void savedUser(User user) {
+        userRepository.save(user);
     }
 
     @Transactional
@@ -58,10 +66,6 @@ public class UserService {
 
         savedUser(user);
         return UserInfoDto.fromEntity(user);
-    }
-
-    private void savedUser(User user) {
-        userRepository.save(user);
     }
 
     private void updateFieldIfPresent(String value, Consumer<String> updater) {
