@@ -3,7 +3,9 @@ package com.kobo.coworker.AI;
 import com.kobo.coworker.common.apiPayload.code.status.ErrorStatus;
 import com.kobo.coworker.common.apiPayload.exception.GeneralException;
 import org.json.JSONObject;
+import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -21,37 +23,54 @@ public class AIClient {
                 .build();
     }
 
-    public String analyzeQuestion(Long documentId, String content) throws Exception {
-        String requestBody = buildRequestBody(documentId, content);
-        HttpRequest request = buildHttpRequest(requestBody);
-        HttpResponse<String> response = sendRequest(request);
+    public String analyzeQuestion(String originalFilename, String fileUrl, String content) {
+        String requestBody = buildRequestBody(originalFilename, fileUrl, content);
+        URI uri = createUri(AI_SERVER_URL);
+        HttpRequest request = buildHttpRequest(uri, requestBody);
+        HttpResponse<String> response = sendSafeRequest(request);
 
         return handleResponse(response);
     }
 
-    private String buildRequestBody(Long documentId, String content) {
+    private String buildRequestBody(String originalFilename, String fileUrl, String content) {
         JSONObject json = new JSONObject();
-        json.put("documentId", documentId);
+        json.put("originalFilename", originalFilename);
+        json.put("fileUrl", fileUrl);
         json.put("content", content);
         return json.toString();
     }
 
-    private HttpRequest buildHttpRequest(String body) throws Exception {
+    private URI createUri(String url) {
+        try {
+            return new URI(url);
+        } catch (URISyntaxException e) {
+            throw new GeneralException(ErrorStatus.AI_SERVER_INVALID_URI);
+        }
+    }
+
+    private HttpRequest buildHttpRequest(URI uri, String body) {
         return HttpRequest.newBuilder()
-                .uri(new URI(AI_SERVER_URL))
+                .uri(uri)
                 .header("Content-Type", "application/json")
                 .timeout(TIMEOUT)
                 .POST(HttpRequest.BodyPublishers.ofString(body))
                 .build();
     }
 
-    private HttpResponse<String> sendRequest(HttpRequest request) throws Exception {
-        return client.send(request, HttpResponse.BodyHandlers.ofString());
+    private HttpResponse<String> sendSafeRequest(HttpRequest request) {
+        try {
+            return client.send(request, HttpResponse.BodyHandlers.ofString());
+        } catch (IOException e) {
+            throw new GeneralException(ErrorStatus.AI_SERVER_IO_ERROR);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new GeneralException(ErrorStatus.AI_SERVER_REQUEST_INTERRUPTED);
+        }
     }
 
     private String handleResponse(HttpResponse<String> response) {
         if (response.statusCode() != 200) {
-            throw new GeneralException(ErrorStatus.AI_SERVER_REQUEST_FAILED);
+            throw new GeneralException(ErrorStatus.AI_SERVER_COMMUNICATION_ERROR);
         }
         return response.body();
     }

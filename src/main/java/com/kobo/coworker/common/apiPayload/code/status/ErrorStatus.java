@@ -23,7 +23,10 @@ public enum ErrorStatus implements BaseErrorCode {
     DOCUMENT_ALREADY_EXISTS(HttpStatus.CONFLICT, "DOCUMENT4002", "이미 존재하는 문서입니다."),
 
     // AI 서버 관련 에러
-    AI_SERVER_REQUEST_FAILED(HttpStatus.SERVICE_UNAVAILABLE, "AI5002", "AI 서버와의 통신이 실패했습니다.");
+    AI_SERVER_INVALID_URI(HttpStatus.INTERNAL_SERVER_ERROR, "AI5001", "AI 서버 URI가 잘못되었습니다."),
+    AI_SERVER_IO_ERROR(HttpStatus.SERVICE_UNAVAILABLE, "AI5002", "AI 서버와의 연결 중 입출력 오류가 발생했습니다."),
+    AI_SERVER_REQUEST_INTERRUPTED(HttpStatus.INTERNAL_SERVER_ERROR, "AI5003", "AI 서버 요청이 중단되었습니다."),
+    AI_SERVER_COMMUNICATION_ERROR(HttpStatus.SERVICE_UNAVAILABLE, "AI5004", "AI 서버와의 통신에 실패했습니다.");
 
     private final HttpStatus httpStatus;
     private final String code;

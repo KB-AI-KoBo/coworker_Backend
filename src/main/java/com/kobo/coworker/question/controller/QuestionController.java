@@ -33,13 +33,14 @@ public class QuestionController {
     @PostMapping("/submit")
     public ResponseEntity<AnalysisResult> submitQuestion(
             @AuthenticationPrincipal UserDetails user,
+            @RequestParam(value = "originalFilename", required = false) String originalFilename,
             @RequestParam(value = "fileUrl", required = false) String fileUrl,
             @RequestParam("content") String content) {
 
         Question question = questionService.submitQuestion(fileUrl, user.getUsername(), content);
 
         AIClient aiClient = new AIClient();
-        String jsonResult = aiClient.analyzeQuestion(documentId, content);
+        String jsonResult = aiClient.analyzeQuestion(originalFilename, fileUrl, content);
 
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, Object> analysisResultMap = objectMapper.readValue(jsonResult, new TypeReference<Map<String, Object>>() {});
