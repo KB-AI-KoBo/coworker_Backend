@@ -22,6 +22,8 @@ public enum ErrorStatus implements BaseErrorCode {
 
     // 문서 관련 에러
     DOCUMENT_ALREADY_EXISTS(HttpStatus.CONFLICT, "DOCUMENT4002", "이미 존재하는 문서입니다."),
+    DOCUMENT_INVALID_FILE_TYPE(HttpStatus.BAD_REQUEST, "DOCUMENT4003", "허용되지 않는 파일 형식입니다."),
+    DOCUMENT_FILENAME_REQUIRED(HttpStatus.BAD_REQUEST, "DOCUMENT4004", "파일명은 Null이 불가능합니다."),
 
     // AI 서버 관련 에러
     AI_SERVER_INVALID_URI(HttpStatus.INTERNAL_SERVER_ERROR, "AI5001", "AI 서버 URI가 잘못되었습니다."),

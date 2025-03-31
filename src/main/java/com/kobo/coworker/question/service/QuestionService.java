@@ -42,7 +42,7 @@ public class QuestionService {
     }
 
     private void validDocumentByFileUrl(String fileUrl) {
-        documentService.findDocumentWithUniqueFileUrl(fileUrl);
+        documentService.validateDocumentFileUrlUniqueness(fileUrl);
     }
 
     private Question createQuestionEntity(User user, Document document, String content) {

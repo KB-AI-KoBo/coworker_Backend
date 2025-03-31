@@ -111,10 +111,8 @@ public class UserService {
         user.setPassword(encryptedPassword);
     }
 
-    public void validateUser(Principal principal) {
-        String username = principal.getName();
-
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new IllegalArgumentException("현재 사용자를 찾을 수 없습니다. username : " + username));
+    public void ensureUserIsUnique(Principal principal) {
+        userRepository.findByUsername(principal.getName())
+                .orElseThrow(() -> new GeneralException(ErrorStatus.USER_ALREADY_EXISTS));
     }
 }
