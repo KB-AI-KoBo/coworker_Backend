@@ -1,6 +1,7 @@
 package com.kobo.coworker.analysis.service;
 
 import com.kobo.coworker.analysis.domain.AnalysisResult;
+import com.kobo.coworker.analysis.dto.AnalysisResultReqDto;
 import com.kobo.coworker.analysis.repository.AnalysisResultRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,8 +20,9 @@ public class AnalysisService {
     }
 
     @Transactional
-    public AnalysisResult saveAnalysisResult(AnalysisResult analysisResult) {
-        return analysisResultRepository.save(analysisResult);
+    public void saveAnalysisResult(AnalysisResultReqDto analysisResultReqDto) {
+        AnalysisResult result = analysisResultReqDto.toEntity();
+        analysisResultRepository.save(result);
     }
 
     public Optional<AnalysisResult> findAnalysisResultById(Long id) {

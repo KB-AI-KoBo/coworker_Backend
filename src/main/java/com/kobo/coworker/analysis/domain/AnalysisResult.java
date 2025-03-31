@@ -1,13 +1,14 @@
 package com.kobo.coworker.analysis.domain;
 
 import com.kobo.coworker.document.domain.Document;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 import javax.persistence.*;
 
 @Entity
 @Getter
-@Setter
+@NoArgsConstructor
 public class AnalysisResult {
 
     @Id
@@ -18,12 +19,15 @@ public class AnalysisResult {
     @JoinColumn(nullable = true)
     private Document document;
 
-    @Column(nullable = false)
     private String content;
-
-    @Column(nullable = false, columnDefinition = "TEXT")
     private String result;
+    private int label;
 
-    @Column(nullable = false)
-    private String label;
+    @Builder
+    public AnalysisResult(Document document, String content, String result, int label) {
+        this.document = document;
+        this.content = content;
+        this.result = result;
+        this.label = label;
+    }
 }

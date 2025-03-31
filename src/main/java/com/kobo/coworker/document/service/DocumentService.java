@@ -58,8 +58,8 @@ public class DocumentService {
         return originalFilename;
     }
 
-    public Document findDocumentWithUniqueFileUrl(String fileUrl) {
-        return documentRepository.findByFileUrl(fileUrl)
+    public void findDocumentWithUniqueFileUrl(String fileUrl) {
+        documentRepository.findByFileUrl(fileUrl)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.DOCUMENT_ALREADY_EXISTS));
     }
 }

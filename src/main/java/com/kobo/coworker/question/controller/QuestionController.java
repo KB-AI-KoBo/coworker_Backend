@@ -36,23 +36,6 @@ public class QuestionController {
         return aiClient.analyzeQuestion(document, content);
     }
 
-//        ObjectMapper objectMapper = new ObjectMapper();
-//        Map<String, Object> analysisResultMap = objectMapper.readValue(jsonResult, new TypeReference<Map<String, Object>>() {});
-//
-//        AnalysisResult analysisResult = new AnalysisResult();
-//
-//        Long returnedDocumentId = analysisResultMap.get("documentId") != null ? Long.valueOf(analysisResultMap.get("documentId").toString()) : null;
-//        String questionContent = analysisResultMap.get("content").toString();
-//        String result = analysisResultMap.get("result").toString();
-//        String label = analysisResultMap.get("label").toString();
-//
-//        analysisResult.setContent(questionContent);
-//        analysisResult.setResult(result);
-//        analysisResult.setLabel(label);
-//
-//        AnalysisResult savedResult = analysisService.saveAnalysisResult(analysisResult);
-
-
     @GetMapping("/{id}")
     public ResponseEntity<Question> getQuestionById(@PathVariable Long id) {
         return questionService.findQuestionById(id)

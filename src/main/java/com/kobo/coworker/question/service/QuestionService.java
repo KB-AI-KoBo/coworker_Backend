@@ -31,6 +31,7 @@ public class QuestionService {
     @Transactional
     public void submitQuestion(String username, Document document, String content) {
         User user = getUserByUsername(username);
+        validDocumentByFileUrl(document.getFileUrl());
         Question question = createQuestionEntity(user, document, content);
         saveQuestion(question);
     }
@@ -39,8 +40,8 @@ public class QuestionService {
         return userService.findUserWithUniqueUsername(username);
     }
 
-    private Document getDocumentByFileUrl(String fileUrl) {
-        return documentService.findDocumentWithUniqueFileUrl(fileUrl);
+    private void validDocumentByFileUrl(String fileUrl) {
+        documentService.findDocumentWithUniqueFileUrl(fileUrl);
     }
 
     private Question createQuestionEntity(User user, Document document, String content) {
