@@ -1,6 +1,5 @@
 package com.kobo.coworker.document.domain;
 
-import com.kobo.coworker.user.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

@@ -23,61 +23,41 @@ public class QuestionController {
 
     private final QuestionService questionService;
     private final AnalysisService analysisService;
-    private final DocumentRepository documentRepository;
 
     @Autowired
-    public QuestionController(QuestionService questionService, AnalysisService analysisService, DocumentRepository documentRepository) {
+    public QuestionController(QuestionService questionService, AnalysisService analysisService) {
         this.questionService = questionService;
         this.analysisService = analysisService;
-        this.documentRepository = documentRepository;
     }
 
     @PostMapping("/submit")
     public ResponseEntity<AnalysisResult> submitQuestion(
             @AuthenticationPrincipal UserDetails user,
-            @RequestParam(value = "documentId", required = false) Long documentId,
+            @RequestParam(value = "fileUrl", required = false) String fileUrl,
             @RequestParam("content") String content) {
 
-        System.out.println("submitQuestion 호출됨");
+        Question question = questionService.submitQuestion(fileUrl, user.getUsername(), content);
 
-        try {
-            Question question = questionService.submitQuestion(documentId, user.getUsername(), content);
-            System.out.println("질문 제출 성공! 질문 내용: " + question.getContent());
+        AIClient aiClient = new AIClient();
+        String jsonResult = aiClient.analyzeQuestion(documentId, content);
 
-            AIClient aiClient = new AIClient();
-            String jsonResult = aiClient.analyzeQuestion(documentId, content);
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, Object> analysisResultMap = objectMapper.readValue(jsonResult, new TypeReference<Map<String, Object>>() {});
 
-            ObjectMapper objectMapper = new ObjectMapper();
-            Map<String, Object> analysisResultMap = objectMapper.readValue(jsonResult, new TypeReference<Map<String, Object>>() {});
+        AnalysisResult analysisResult = new AnalysisResult();
 
-            AnalysisResult analysisResult = new AnalysisResult();
+        Long returnedDocumentId = analysisResultMap.get("documentId") != null ? Long.valueOf(analysisResultMap.get("documentId").toString()) : null;
+        String questionContent = analysisResultMap.get("content").toString();
+        String result = analysisResultMap.get("result").toString();
+        String label = analysisResultMap.get("label").toString();
 
-            Long returnedDocumentId = analysisResultMap.get("documentId") != null ? Long.valueOf(analysisResultMap.get("documentId").toString()) : null;
-            String questionContent = analysisResultMap.get("content").toString();
-            String result = analysisResultMap.get("result").toString();
-            String label = analysisResultMap.get("label").toString();
+        analysisResult.setContent(questionContent);
+        analysisResult.setResult(result);
+        analysisResult.setLabel(label);
 
-            if (returnedDocumentId != null) {
-                Document document = documentRepository.findByDocumentId(returnedDocumentId)
-                        .orElseThrow(() -> new RuntimeException("문서를 찾을 수 없습니다."));
-                analysisResult.setDocument(document);
-                System.out.println("저장된 문서(documentId): " + returnedDocumentId);
-            } else {
-                System.out.println("문서 없이 질문을 제출합니다.");
-            }
+        AnalysisResult savedResult = analysisService.saveAnalysisResult(analysisResult);
 
-            analysisResult.setContent(questionContent);
-            analysisResult.setResult(result);
-            analysisResult.setLabel(label);
-
-            AnalysisResult savedResult = analysisService.saveAnalysisResult(analysisResult);
-            System.out.println("분석 결과 저장 성공!");
-
-            return ResponseEntity.status(HttpStatus.CREATED).body(savedResult);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedResult);
     }
 
     @GetMapping("/{id}")

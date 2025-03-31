@@ -20,7 +20,10 @@ public enum ErrorStatus implements BaseErrorCode {
     USER_ALREADY_EXISTS(HttpStatus.CONFLICT, "USER4002", "이미 존재하는 사용자입니다."),
 
     // 문서 관련 에러
-    DOCUMENT_ALREADY_EXISTS(HttpStatus.CONFLICT, "DOCUMENT4002", "이미 존재하는 문서입니다.");
+    DOCUMENT_ALREADY_EXISTS(HttpStatus.CONFLICT, "DOCUMENT4002", "이미 존재하는 문서입니다."),
+
+    // AI 서버 관련 에러
+    AI_SERVER_REQUEST_FAILED(HttpStatus.SERVICE_UNAVAILABLE, "AI5002", "AI 서버와의 통신이 실패했습니다.");
 
     private final HttpStatus httpStatus;
     private final String code;

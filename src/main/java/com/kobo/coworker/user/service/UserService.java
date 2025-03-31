@@ -75,12 +75,12 @@ public class UserService {
 
     public User findUserWithUniqueEmail(String email) {
         return userRepository.findByEmail(email)
-                .orElseThrow(() -> new GeneralException(ErrorStatus.USER_ALREADY_EXISTS));
+                .orElseThrow(() -> new GeneralException(ErrorStatus._UNAUTHORIZED));
     }
 
     public User findUserWithUniqueUsername(String username) {
         return userRepository.findByUsername(username)
-                .orElseThrow(() -> new GeneralException(ErrorStatus.USER_ALREADY_EXISTS));
+                .orElseThrow(() -> new GeneralException(ErrorStatus._UNAUTHORIZED));
     }
 
     public boolean isEmailRegistered(String email) {
