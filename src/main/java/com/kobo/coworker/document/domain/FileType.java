@@ -3,6 +3,7 @@ package com.kobo.coworker.document.domain;
 import java.util.EnumSet;
 
 public enum FileType {
+
     PDF,
     PPT,
     EXCEL,
@@ -13,4 +14,5 @@ public enum FileType {
     public static boolean isValid(FileType fileType) {
         return SUPPORTED_TYPES.contains(fileType);
     }
+
 }

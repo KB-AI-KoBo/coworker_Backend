@@ -9,6 +9,7 @@ import lombok.Data;
 @AllArgsConstructor
 @Builder
 public class UserSignupReqDto {
+
     private String username;
     private String password;
     private String email;

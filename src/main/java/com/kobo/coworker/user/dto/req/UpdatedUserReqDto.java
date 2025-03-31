@@ -8,6 +8,7 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public class UpdatedUserReqDto {
+
     private String username;
     private String password;
     private String email;
@@ -15,4 +16,5 @@ public class UpdatedUserReqDto {
     private String companySize;
     private String registrationNumber;
     private String industry;
+
 }

@@ -30,4 +30,5 @@ public class AnalysisResult {
         this.result = result;
         this.label = label;
     }
+
 }

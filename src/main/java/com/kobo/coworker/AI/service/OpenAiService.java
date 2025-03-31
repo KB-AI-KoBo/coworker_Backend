@@ -43,9 +43,7 @@ public class OpenAiService {
                 entity,
                 String.class);
 
-        // JSON 응답을 List<SupportProgram>으로 변환
         try {
-            // 응답을 파싱하여 List<SupportProgram>으로 변환
             List<SupportProgram> supportPrograms = objectMapper.readValue(response.getBody(),
                     objectMapper.getTypeFactory().constructCollectionType(List.class, SupportProgram.class));
             return supportPrograms;
@@ -54,4 +52,5 @@ public class OpenAiService {
             return null;
         }
     }
+
 }

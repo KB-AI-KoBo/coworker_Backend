@@ -115,4 +115,5 @@ public class UserService {
         userRepository.findByUsername(principal.getName())
                 .orElseThrow(() -> new GeneralException(ErrorStatus.USER_ALREADY_EXISTS));
     }
+
 }

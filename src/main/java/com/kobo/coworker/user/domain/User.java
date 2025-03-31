@@ -55,4 +55,5 @@ public class User {
         this.industry = industry;
         this.createdAt = LocalDateTime.now();
     }
+
 }

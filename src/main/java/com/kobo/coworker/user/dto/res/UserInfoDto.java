@@ -9,6 +9,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class UserInfoDto {
+
     private Long id;
     private String username;
     private String email;
@@ -27,4 +28,5 @@ public class UserInfoDto {
                 .registrationNumber(user.getRegistrationNumber())
                 .build();
     }
+
 }

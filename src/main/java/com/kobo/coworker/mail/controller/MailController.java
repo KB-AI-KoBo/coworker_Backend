@@ -29,4 +29,5 @@ public class MailController {
 
         return ResponseEntity.ok("임시 비밀번호가 이메일로 전송되었습니다.");
     }
+
 }

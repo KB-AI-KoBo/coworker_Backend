@@ -27,4 +27,5 @@ public class DocumentController {
         DocumentInfoDto documentInfoDto = documentService.uploadDocument(principal, file);
         return ResponseEntity.ok(documentInfoDto);
     }
+
 }

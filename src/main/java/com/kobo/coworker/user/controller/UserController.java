@@ -9,7 +9,6 @@ import com.kobo.coworker.user.dto.res.UserInfoDto;
 import com.kobo.coworker.user.repository.UserRepository;
 import com.kobo.coworker.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
@@ -50,13 +49,14 @@ public class UserController {
 
     @GetMapping("/profile/username")
     public ResponseEntity<User> findByUsername(@RequestParam String username) {
-        User user = userService.findByUsername(username);
+        User user = userService.findUserWithUniqueUsername(username);
         return ResponseEntity.ok(user);
     }
 
     @GetMapping("/profile/email/{email}")
     public ResponseEntity<User> findByEmail(@PathVariable String email) {
-        User user = userService.findByEmail(email);
+        User user = userService.findUserWithUniqueEmail(email);
         return ResponseEntity.ok(user);
     }
+
 }

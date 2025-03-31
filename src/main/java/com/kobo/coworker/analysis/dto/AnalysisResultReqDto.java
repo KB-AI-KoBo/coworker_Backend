@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class AnalysisResultReqDto {
+    
     private Document document;
     private String content;
     private String result;
@@ -30,4 +31,5 @@ public class AnalysisResultReqDto {
                 .label(label)
                 .build();
     }
+
 }

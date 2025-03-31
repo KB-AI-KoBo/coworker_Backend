@@ -36,6 +36,4 @@ public class NotificationService {
         return notificationRepository.existsById(id);
     }
 
-
-
 }

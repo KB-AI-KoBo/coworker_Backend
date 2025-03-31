@@ -28,4 +28,5 @@ public class Document {
     @Column(nullable = false, updatable = false)
     @CreationTimestamp
     private Timestamp uploadedAt;
+
 }

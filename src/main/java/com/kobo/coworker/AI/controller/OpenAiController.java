@@ -26,4 +26,5 @@ public class OpenAiController {
         List<SupportProgram> supportPrograms = openAiService.callOpenAiApi(input);
         return ResponseEntity.ok(supportPrograms);
     }
+
 }

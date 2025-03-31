@@ -11,7 +11,6 @@ import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.security.Principal;
 
 @Service
@@ -61,4 +60,5 @@ public class DocumentService {
         documentRepository.findByFileUrl(fileUrl)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.DOCUMENT_ALREADY_EXISTS));
     }
+
 }

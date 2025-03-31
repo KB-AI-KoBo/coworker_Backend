@@ -8,6 +8,8 @@ import java.util.List;
 @Getter
 @Setter
 public class ProgramResDto {
+
     private List<SupportProgram> data;
+
 }
 

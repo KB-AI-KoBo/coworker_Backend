@@ -36,4 +36,5 @@ public class AnalysisService {
     public void deleteAnalysisResultById(Long id) {
         analysisResultRepository.deleteById(id);
     }
+
 }

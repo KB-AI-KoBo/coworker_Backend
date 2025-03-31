@@ -11,6 +11,7 @@ import javax.persistence.Id;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SupportProgram {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -21,4 +22,5 @@ public class SupportProgram {
     private String supervisingAgency;
     private String implementingAgency;
     private String detailURL;
+
 }

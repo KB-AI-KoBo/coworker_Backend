@@ -5,6 +5,7 @@ import lombok.Getter;
 
 @Getter
 public class DocumentInfoDto {
+
     private final String originalFilename;
     private final String fileUrl;
 
@@ -13,4 +14,5 @@ public class DocumentInfoDto {
         this.originalFilename = originalFilename;
         this.fileUrl = fileUrl;
     }
+
 }

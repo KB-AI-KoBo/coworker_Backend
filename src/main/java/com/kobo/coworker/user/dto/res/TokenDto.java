@@ -7,8 +7,10 @@ import lombok.*;
 @AllArgsConstructor
 @Data
 public class TokenDto {
+
     @SerializedName("access_token")
     String access_token;
     @SerializedName("refresh_token")
     private String refresh_token;
+
 }
