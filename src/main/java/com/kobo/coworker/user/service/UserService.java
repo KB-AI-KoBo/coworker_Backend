@@ -53,8 +53,7 @@ public class UserService {
 
     @Transactional
     public UserInfoDto updateUser(Principal principal, UpdatedUserReqDto updatedUserReqDto) {
-        User user = userRepository.findByUsername(principal.getName())
-                .orElseThrow(() -> new IllegalArgumentException("해당 유저가 존재하지 않습니다."));
+        User user = findUserWithUniqueUsername(principal.getName());
 
         updateFieldIfPresent(updatedUserReqDto.getUsername(), user::setUsername);
         updateFieldIfPresent(updatedUserReqDto.getPassword(), password -> user.setPassword(passwordEncoder.encode(password)));
@@ -74,14 +73,14 @@ public class UserService {
         }
     }
 
-    public User findByUsername(String username) {
-        return userRepository.findByUsername(username)
-                .orElseThrow(() -> new IllegalArgumentException("해당 사용자를 찾을 수 없습니다."));
+    public User findUserWithUniqueEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.USER_ALREADY_EXISTS));
     }
 
-    public User findByEmail(String email) {
-        return userRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("해당 사용자를 찾을 수 없습니다."));
+    public User findUserWithUniqueUsername(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.USER_ALREADY_EXISTS));
     }
 
     public boolean isEmailRegistered(String email) {

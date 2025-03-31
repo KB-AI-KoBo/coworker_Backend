@@ -1,12 +1,12 @@
-package com.kobo.coworker.analysis.controller;
+package com.kobo.coworker.question.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kobo.coworker.AI.AIClient;
 import com.kobo.coworker.analysis.domain.AnalysisResult;
-import com.kobo.coworker.analysis.domain.Question;
+import com.kobo.coworker.question.domain.Question;
 import com.kobo.coworker.analysis.service.AnalysisService;
-import com.kobo.coworker.analysis.service.QuestionService;
+import com.kobo.coworker.question.service.QuestionService;
 import com.kobo.coworker.document.domain.Document;
 import com.kobo.coworker.document.repository.DocumentRepository;
 import org.springframework.beans.factory.annotation.Autowired;

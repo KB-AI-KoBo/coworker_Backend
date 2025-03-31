@@ -8,4 +8,5 @@ import java.util.Optional;
 @Repository
 public interface DocumentRepository extends JpaRepository<Document, Long> {
     Optional<Document> findByDocumentId(Long documentId);
+    Optional<Document> findByFileUrl(String fileUrl);
 }

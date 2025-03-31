@@ -1,8 +1,12 @@
 package com.kobo.coworker.document.service;
 
+import com.kobo.coworker.common.apiPayload.code.status.ErrorStatus;
+import com.kobo.coworker.common.apiPayload.exception.GeneralException;
 import com.kobo.coworker.common.s3.S3UploadService;
+import com.kobo.coworker.document.domain.Document;
 import com.kobo.coworker.document.domain.FileType;
 import com.kobo.coworker.document.dto.UploadResDto;
+import com.kobo.coworker.document.repository.DocumentRepository;
 import com.kobo.coworker.user.service.UserService;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.stereotype.Service;
@@ -15,10 +19,12 @@ public class DocumentService {
 
     private final S3UploadService s3UploadService;
     private final UserService userService;
+    private final DocumentRepository documentRepository;
 
-    public DocumentService(S3UploadService s3UploadService, UserService userService) {
+    public DocumentService(S3UploadService s3UploadService, UserService userService, DocumentRepository documentRepository) {
         this.s3UploadService = s3UploadService;
         this.userService = userService;
+        this.documentRepository = documentRepository;
     }
 
     public UploadResDto uploadDocument(Principal principal, MultipartFile multipartFile) throws IOException {
@@ -50,5 +56,10 @@ public class DocumentService {
             throw new IllegalArgumentException("파일명은 Null이 불가능합니다.");
         }
         return originalFilename;
+    }
+
+    public Document findDocumentWithUniqueFileUrl(String fileUrl) {
+        return documentRepository.findByFileUrl(fileUrl)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.DOCUMENT_ALREADY_EXISTS));
     }
 }

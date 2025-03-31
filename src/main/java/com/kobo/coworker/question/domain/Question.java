@@ -1,15 +1,13 @@
-package com.kobo.coworker.analysis.domain;
+package com.kobo.coworker.question.domain;
 
 import com.kobo.coworker.document.domain.Document;
 import com.kobo.coworker.user.domain.User;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import javax.persistence.*;
 
-
 @Entity
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
 public class Question {
 
     @Id
@@ -26,4 +24,13 @@ public class Question {
 
     @Column(nullable = false)
     private String content;
+
+    @Builder
+    public Question(Long questionId, Document document, User user, String content) {
+        this.questionId = questionId;
+        this.document = document;
+        this.user = user;
+        this.content = content;
+    }
+
 }
