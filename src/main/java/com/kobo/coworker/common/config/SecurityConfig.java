@@ -102,7 +102,9 @@ public class SecurityConfig {
                 "http://192.168.219.211:3000",
                 "https://co-worker.site",
                 "http://co-worker.store",
-                "https://co-worker.store"));
+                "https://co-worker.store",
+                "http://coworkerkobo.shop",
+                "https://coworkerkobo.shop"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setExposedHeaders(List.of(
