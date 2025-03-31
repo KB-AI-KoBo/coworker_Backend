@@ -100,6 +100,7 @@ public class SecurityConfig {
 
         configuration.setAllowedOriginPatterns(List.of(
                 "http://192.168.219.211:3000",
+                "http://172.16.20.76:3000",
                 "https://co-worker.site",
                 "http://co-worker.store",
                 "https://co-worker.store",
