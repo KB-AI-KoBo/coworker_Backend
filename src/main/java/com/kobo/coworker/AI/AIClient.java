@@ -2,7 +2,9 @@ package com.kobo.coworker.AI;
 
 import com.kobo.coworker.common.apiPayload.code.status.ErrorStatus;
 import com.kobo.coworker.common.apiPayload.exception.GeneralException;
+import com.kobo.coworker.document.domain.Document;
 import org.json.JSONObject;
+import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -11,6 +13,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 
+@Component
 public class AIClient {
 
     private static final String AI_SERVER_URL = "http://coworkerkobo.shop/";
@@ -23,30 +26,32 @@ public class AIClient {
                 .build();
     }
 
-    public String analyzeQuestion(String originalFilename, String fileUrl, String content) {
-        String requestBody = buildRequestBody(originalFilename, fileUrl, content);
-        URI uri = createUri(AI_SERVER_URL);
+    public String analyzeQuestion(Document document, String content) {
+        String requestBody = buildRequestBody(document, content);
+        URI uri = createUri();
         HttpRequest request = buildHttpRequest(uri, requestBody);
         HttpResponse<String> response = sendSafeRequest(request);
 
         return handleResponse(response);
     }
 
-    private String buildRequestBody(String originalFilename, String fileUrl, String content) {
+    private String buildRequestBody(Document document, String content) {
         JSONObject json = new JSONObject();
-        if (originalFilename != null && !originalFilename.isBlank()) {
-            json.put("originalFilename", originalFilename);
-        }
-        if (fileUrl != null && !fileUrl.isBlank()) {
-            json.put("fileUrl", fileUrl);
+        if (ensureDocumentIsPresent(document)) {
+            json.put("originalFilename", document.getOriginalFilename());
+            json.put("fileUrl", document.getFileUrl());
         }
         json.put("content", content);
         return json.toString();
     }
 
-    private URI createUri(String url) {
+    private boolean ensureDocumentIsPresent(Document document) {
+        return document.getOriginalFilename() != null || document.getFileUrl() != null;
+    }
+
+    private URI createUri() {
         try {
-            return new URI(url);
+            return new URI(AI_SERVER_URL);
         } catch (URISyntaxException e) {
             throw new GeneralException(ErrorStatus.AI_SERVER_INVALID_URI);
         }

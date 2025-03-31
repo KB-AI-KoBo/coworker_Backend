@@ -29,9 +29,8 @@ public class QuestionService {
     }
 
     @Transactional
-    public void submitQuestion(String username, String fileUrl, String content) {
+    public void submitQuestion(String username, Document document, String content) {
         User user = getUserByUsername(username);
-        Document document = getDocumentByFileUrl(fileUrl);
         Question question = createQuestionEntity(user, document, content);
         saveQuestion(question);
     }
@@ -53,9 +52,11 @@ public class QuestionService {
         return questionInfoDto.toEntity();
     }
 
-    private Question saveQuestion(Question question) {
-        return questionRepository.save(question);
+    private void saveQuestion(Question question) {
+        questionRepository.save(question);
     }
+
+
 
     public Optional<Question> findQuestionById(Long id) {
         return questionRepository.findById(id);
