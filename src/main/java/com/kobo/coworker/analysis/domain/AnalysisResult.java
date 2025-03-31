@@ -6,25 +6,24 @@ import lombok.Setter;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "analysis_results")
 @Getter
 @Setter
 public class AnalysisResult {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long analysisId;
 
     @ManyToOne
-    @JoinColumn(name = "document_id", nullable = true)
+    @JoinColumn(nullable = true)
     private Document document;
 
-    @Column(name = "content", nullable = false)
-    private String Content;
+    @Column(nullable = false)
+    private String content;
 
-    @Column(name = "result", columnDefinition = "TEXT")
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String result;
 
-    @Column(name = "label")
+    @Column(nullable = false)
     private String label;
 }

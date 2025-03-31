@@ -20,19 +20,11 @@ public class Document {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long documentId;
 
-    @ManyToOne
-    @JoinColumn(nullable = false)
-    private User user;
+    @Column(nullable = false)
+    private String originalFilename;
 
     @Column(nullable = false)
-    private String documentName;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private FileType documentType;
-
-    @Column(nullable = false)
-    private String documentPath;
+    private String fileUrl;
 
     @Column(nullable = false, updatable = false)
     @CreationTimestamp
