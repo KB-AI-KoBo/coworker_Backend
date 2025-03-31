@@ -2,6 +2,7 @@ package com.kobo.coworker.question.controller;
 
 import com.kobo.coworker.AI.AIClient;
 import com.kobo.coworker.question.domain.Question;
+import com.kobo.coworker.question.dto.QuestionReqDto;
 import com.kobo.coworker.question.service.QuestionService;
 import com.kobo.coworker.document.domain.Document;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,10 +28,11 @@ public class QuestionController {
     @PostMapping
     public String submitQuestionForRequestAnalysis(
             @AuthenticationPrincipal UserDetails user,
-            @RequestBody Document document,
-            @RequestParam("content") String content) {
-        String username = user.getUsername();
-        questionService.submitQuestion(username, document, content);
+            @RequestBody QuestionReqDto questionReqDto) {
+        Document document = questionReqDto.getDocument();
+        String content = questionReqDto.getContent();
+
+        questionService.submitQuestion(user.getUsername(), document, content);
         return aiClient.analyzeQuestion(document, content);
     }
 
