@@ -4,14 +4,14 @@ import com.kobo.coworker.common.apiPayload.code.status.ErrorStatus;
 import com.kobo.coworker.common.apiPayload.exception.GeneralException;
 import com.kobo.coworker.common.s3.S3UploadService;
 import com.kobo.coworker.document.domain.FileType;
-import com.kobo.coworker.document.dto.UploadResDto;
+import com.kobo.coworker.document.dto.DocumentInfoDto;
 import com.kobo.coworker.document.repository.DocumentRepository;
 import com.kobo.coworker.user.service.UserService;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import java.io.IOException;
+
 import java.security.Principal;
 
 @Service
@@ -28,10 +28,10 @@ public class DocumentService {
         this.documentRepository = documentRepository;
     }
 
-    public UploadResDto uploadDocument(Principal principal, MultipartFile multipartFile) {
+    public DocumentInfoDto uploadDocument(Principal principal, MultipartFile multipartFile) {
         userService.ensureUserIsUnique(principal);
         validateFileType(multipartFile);
-        return s3UploadService.saveFile(principal.getName(), multipartFile);
+        return s3UploadService.saveFile(principal, multipartFile);
     }
 
     private void validateFileType(MultipartFile multipartFile) {
@@ -51,7 +51,7 @@ public class DocumentService {
         return multipartFile.getOriginalFilename();
     }
 
-    private void validateOriginalFileNameNotNull(MultipartFile multipartFile) {
+    public static void validateOriginalFileNameNotNull(MultipartFile multipartFile) {
         if (multipartFile.getOriginalFilename() == null) {
             throw new GeneralException(ErrorStatus.DOCUMENT_FILENAME_REQUIRED);
         }
