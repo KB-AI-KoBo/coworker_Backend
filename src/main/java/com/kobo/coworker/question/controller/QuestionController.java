@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kobo.coworker.AI.AIClient;
 import com.kobo.coworker.analysis.domain.AnalysisResult;
+import com.kobo.coworker.common.apiPayload.code.status.ErrorStatus;
+import com.kobo.coworker.common.apiPayload.code.status.SuccessStatus;
 import com.kobo.coworker.question.domain.Question;
 import com.kobo.coworker.analysis.service.AnalysisService;
 import com.kobo.coworker.question.service.QuestionService;
@@ -31,35 +33,38 @@ public class QuestionController {
     }
 
     @PostMapping("/submit")
-    public ResponseEntity<AnalysisResult> submitQuestion(
+    public String submitQuestion(
             @AuthenticationPrincipal UserDetails user,
-            @RequestParam(value = "originalFilename", required = false) String originalFilename,
-            @RequestParam(value = "fileUrl", required = false) String fileUrl,
+            @RequestBody Document document,
             @RequestParam("content") String content) {
 
-        Question question = questionService.submitQuestion(fileUrl, user.getUsername(), content);
+        String fileUrl = document.getFileUrl();
+        String originalFilename = document.getOriginalFilename();
+        String username = user.getUsername();
+
+        questionService.submitQuestion(fileUrl, username, content);
 
         AIClient aiClient = new AIClient();
-        String jsonResult = aiClient.analyzeQuestion(originalFilename, fileUrl, content);
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        Map<String, Object> analysisResultMap = objectMapper.readValue(jsonResult, new TypeReference<Map<String, Object>>() {});
-
-        AnalysisResult analysisResult = new AnalysisResult();
-
-        Long returnedDocumentId = analysisResultMap.get("documentId") != null ? Long.valueOf(analysisResultMap.get("documentId").toString()) : null;
-        String questionContent = analysisResultMap.get("content").toString();
-        String result = analysisResultMap.get("result").toString();
-        String label = analysisResultMap.get("label").toString();
-
-        analysisResult.setContent(questionContent);
-        analysisResult.setResult(result);
-        analysisResult.setLabel(label);
-
-        AnalysisResult savedResult = analysisService.saveAnalysisResult(analysisResult);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedResult);
+        return aiClient.analyzeQuestion(originalFilename, fileUrl, content);
     }
+
+//        ObjectMapper objectMapper = new ObjectMapper();
+//        Map<String, Object> analysisResultMap = objectMapper.readValue(jsonResult, new TypeReference<Map<String, Object>>() {});
+//
+//        AnalysisResult analysisResult = new AnalysisResult();
+//
+//        Long returnedDocumentId = analysisResultMap.get("documentId") != null ? Long.valueOf(analysisResultMap.get("documentId").toString()) : null;
+//        String questionContent = analysisResultMap.get("content").toString();
+//        String result = analysisResultMap.get("result").toString();
+//        String label = analysisResultMap.get("label").toString();
+//
+//        analysisResult.setContent(questionContent);
+//        analysisResult.setResult(result);
+//        analysisResult.setLabel(label);
+//
+//        AnalysisResult savedResult = analysisService.saveAnalysisResult(analysisResult);
+
 
     @GetMapping("/{id}")
     public ResponseEntity<Question> getQuestionById(@PathVariable Long id) {

@@ -34,8 +34,12 @@ public class AIClient {
 
     private String buildRequestBody(String originalFilename, String fileUrl, String content) {
         JSONObject json = new JSONObject();
-        json.put("originalFilename", originalFilename);
-        json.put("fileUrl", fileUrl);
+        if (originalFilename != null && !originalFilename.isBlank()) {
+            json.put("originalFilename", originalFilename);
+        }
+        if (fileUrl != null && !fileUrl.isBlank()) {
+            json.put("fileUrl", fileUrl);
+        }
         json.put("content", content);
         return json.toString();
     }

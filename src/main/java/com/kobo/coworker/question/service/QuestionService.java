@@ -29,11 +29,11 @@ public class QuestionService {
     }
 
     @Transactional
-    public Question submitQuestion(String username, String fileUrl, String content) {
+    public void submitQuestion(String username, String fileUrl, String content) {
         User user = getUserByUsername(username);
         Document document = getDocumentByFileUrl(fileUrl);
         Question question = createQuestionEntity(user, document, content);
-        return saveQuestion(question);
+        saveQuestion(question);
     }
 
     private User getUserByUsername(String username) {
