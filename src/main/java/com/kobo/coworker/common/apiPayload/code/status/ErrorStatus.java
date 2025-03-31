@@ -32,7 +32,10 @@ public enum ErrorStatus implements BaseErrorCode {
     AI_SERVER_COMMUNICATION_ERROR(HttpStatus.SERVICE_UNAVAILABLE, "AI5004", "AI 서버와의 통신에 실패했습니다."),
 
     // 질문 관련 에러
-    QUESTION_NOT_EXISTS(HttpStatus.NOT_FOUND, "QUESTION404", "존재하지 않는 질문입니다.");
+    QUESTION_NOT_EXISTS(HttpStatus.NOT_FOUND, "QUESTION404", "존재하지 않는 질문입니다."),
+
+    // 분석 결과 관련 에러
+    ANALYSIS_RESULT_NOT_EXISTS(HttpStatus.NOT_FOUND, "ANALYSIS404", "존재하지 않는 분석결과입니다.");
 
     private final HttpStatus httpStatus;
     private final String code;

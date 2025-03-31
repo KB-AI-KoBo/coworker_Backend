@@ -1,7 +1,7 @@
 package com.kobo.coworker.analysis.controller;
 
 import com.kobo.coworker.analysis.domain.AnalysisResult;
-import com.kobo.coworker.analysis.dto.AnalysisResultReqDto;
+import com.kobo.coworker.analysis.dto.AnalysisResultInfoDto;
 import com.kobo.coworker.analysis.service.AnalysisService;
 import com.kobo.coworker.common.apiPayload.code.status.SuccessStatus;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,32 +21,25 @@ public class AnalysisController {
     }
 
     @PostMapping
-    public ResponseEntity<SuccessStatus> receiveAnalysis(@RequestBody AnalysisResultReqDto dto) {
-        analysisService.saveAnalysisResult(dto);
+    public ResponseEntity<SuccessStatus> receiveAnalysis(@RequestBody AnalysisResultInfoDto dto) {
+        analysisService.save(dto);
         return ResponseEntity.ok(SuccessStatus._OK);
     }
 
-    @GetMapping("/result/{id}")
-    public ResponseEntity<AnalysisResult> getAnalysisResultById(@PathVariable Long id) {
-        return analysisService.findAnalysisResultById(id)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    @GetMapping("/{id}")
+    public AnalysisResultInfoDto getAnalysisResultById(@PathVariable Long id) {
+        return analysisService.getDtoById(id);
     }
 
-    @GetMapping("/results/document/{documentId}")
-    public ResponseEntity<List<AnalysisResult>> getAnalysisResultsByDocument(@PathVariable Long documentId) {
-        List<AnalysisResult> results = analysisService.findAnalysisResultsByDocumentId(documentId);
-        return results.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(results);
+    @GetMapping("/document/{documentId}")
+    public List<AnalysisResultInfoDto> getAnalysisResultsByDocument(@PathVariable Long documentId) {
+        return analysisService.findAnalysisResultsByDocumentId(documentId);
     }
 
-    @DeleteMapping("/result/{id}")
-    public ResponseEntity<Void> deleteAnalysisResult(@PathVariable Long id) {
-        if (analysisService.findAnalysisResultById(id).isPresent()) {
-            analysisService.deleteAnalysisResultById(id);
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    @DeleteMapping("/{id}")
+    public SuccessStatus deleteAnalysisResult(@PathVariable Long id) {
+        analysisService.deleteById(id);
+        return SuccessStatus._OK;
     }
 
 }

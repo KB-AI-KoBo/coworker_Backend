@@ -8,6 +8,6 @@ import java.util.List;
 @Repository
 public interface AnalysisResultRepository extends JpaRepository<AnalysisResult, Long> {
 
-    List<AnalysisResult> findByDocument_DocumentId(Long documentId);
+    List<AnalysisResult> findByDocumentId(Long documentId);
 
 }
