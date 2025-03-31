@@ -32,4 +32,13 @@ public class QuestionInfoDto {
                 .build();
     }
 
+    public static QuestionInfoDto fromEntity(Question question) {
+        return QuestionInfoDto.builder()
+                .questionId(question.getQuestionId())
+                .document(question.getDocument())
+                .user(question.getUser())
+                .content(question.getContent())
+                .build();
+    }
+
 }

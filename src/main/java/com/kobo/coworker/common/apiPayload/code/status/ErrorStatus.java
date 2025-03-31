@@ -2,6 +2,7 @@ package com.kobo.coworker.common.apiPayload.code.status;
 
 import com.kobo.coworker.common.apiPayload.code.BaseErrorCode;
 import com.kobo.coworker.common.apiPayload.code.ErrorReasonDto;
+import com.kobo.coworker.question.domain.Question;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
@@ -26,7 +27,10 @@ public enum ErrorStatus implements BaseErrorCode {
     AI_SERVER_INVALID_URI(HttpStatus.INTERNAL_SERVER_ERROR, "AI5001", "AI 서버 URI가 잘못되었습니다."),
     AI_SERVER_IO_ERROR(HttpStatus.SERVICE_UNAVAILABLE, "AI5002", "AI 서버와의 연결 중 입출력 오류가 발생했습니다."),
     AI_SERVER_REQUEST_INTERRUPTED(HttpStatus.INTERNAL_SERVER_ERROR, "AI5003", "AI 서버 요청이 중단되었습니다."),
-    AI_SERVER_COMMUNICATION_ERROR(HttpStatus.SERVICE_UNAVAILABLE, "AI5004", "AI 서버와의 통신에 실패했습니다.");
+    AI_SERVER_COMMUNICATION_ERROR(HttpStatus.SERVICE_UNAVAILABLE, "AI5004", "AI 서버와의 통신에 실패했습니다."),
+
+    // 질문 관련 에러
+    QUESTION_NOT_EXISTS(HttpStatus.NOT_FOUND, "QUESTION404", "존재하지 않는 질문입니다.");
 
     private final HttpStatus httpStatus;
     private final String code;

@@ -1,13 +1,12 @@
 package com.kobo.coworker.question.controller;
 
 import com.kobo.coworker.AI.AIClient;
-import com.kobo.coworker.question.domain.Question;
+import com.kobo.coworker.common.apiPayload.code.status.SuccessStatus;
+import com.kobo.coworker.question.dto.QuestionInfoDto;
 import com.kobo.coworker.question.dto.QuestionReqDto;
 import com.kobo.coworker.question.service.QuestionService;
 import com.kobo.coworker.document.domain.Document;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
@@ -37,20 +36,14 @@ public class QuestionController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Question> getQuestionById(@PathVariable Long id) {
-        return questionService.findQuestionById(id)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    public QuestionInfoDto getQuestionById(@PathVariable Long id) {
+        return questionService.getQuestionInfoDtoById(id);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteQuestion(@PathVariable Long id) {
-        try {
-            questionService.deleteQuestion(id);
-            return new ResponseEntity<>("질문이 성공적으로 삭제되었습니다.", HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>("질문 삭제에 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public SuccessStatus deleteQuestion(@PathVariable Long id) {
+        questionService.deleteQuestion(id);
+        return SuccessStatus._OK;
     }
 
 }

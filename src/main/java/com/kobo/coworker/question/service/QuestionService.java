@@ -1,5 +1,7 @@
 package com.kobo.coworker.question.service;
 
+import com.kobo.coworker.common.apiPayload.code.status.ErrorStatus;
+import com.kobo.coworker.common.apiPayload.exception.GeneralException;
 import com.kobo.coworker.document.domain.Document;
 import com.kobo.coworker.document.service.DocumentService;
 import com.kobo.coworker.question.domain.Question;
@@ -10,7 +12,6 @@ import com.kobo.coworker.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.Optional;
 
 @Service
 public class QuestionService {
@@ -57,18 +58,26 @@ public class QuestionService {
         questionRepository.save(question);
     }
 
+    @Transactional
+    public QuestionInfoDto getQuestionInfoDtoById(Long id) {
+        Question question = findQuestionIdWithExists(id);
+        return QuestionInfoDto.fromEntity(question);
+    }
 
-
-    public Optional<Question> findQuestionById(Long id) {
-        return questionRepository.findById(id);
+    private Question findQuestionIdWithExists(Long id) {
+        return questionRepository.findById(id)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.QUESTION_NOT_EXISTS));
     }
 
     @Transactional
     public void deleteQuestion(Long id) {
-        if (questionRepository.existsById(id)) {
-            questionRepository.deleteById(id);
-        } else {
-            throw new RuntimeException("질문을 찾을 수 없습니다.");
+        ensureQuestionExistsById(id);
+        questionRepository.deleteById(id);
+    }
+
+    private void ensureQuestionExistsById(Long id) {
+        if (!questionRepository.existsById(id)) {
+            throw new GeneralException(ErrorStatus.QUESTION_NOT_EXISTS);
         }
     }
 }
