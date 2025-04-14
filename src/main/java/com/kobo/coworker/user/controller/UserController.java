@@ -34,7 +34,7 @@ public class UserController {
 
     @GetMapping("/profile")
     public ResponseEntity<User> getProfile(Principal principal) {
-        User user = userRepository.findByEmail(principal.getName())
+        User user = userRepository.findByUsername(principal.getName())
                 .orElseThrow(() -> new RuntimeException("회원가입하지 않은 사용자입니다."));
 
         return ResponseEntity.ok(user);

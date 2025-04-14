@@ -53,9 +53,8 @@ public class UserService {
 
     @Transactional
     public UserInfoDto updateUser(Principal principal, UpdatedUserReqDto updatedUserReqDto) {
-        User user = findUserWithUniqueEmail(principal.getName());
+        User user = findUserWithUniqueUsername(principal.getName());
 
-        updateFieldIfPresent(updatedUserReqDto.getUsername(), user::setUsername);
         updateFieldIfPresent(updatedUserReqDto.getPassword(), password -> user.setPassword(passwordEncoder.encode(password)));
         updateFieldIfPresent(updatedUserReqDto.getEmail(), user::setEmail);
         updateFieldIfPresent(updatedUserReqDto.getCompanyName(), user::setCompanyName);
