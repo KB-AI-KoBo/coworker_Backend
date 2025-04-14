@@ -8,6 +8,7 @@ import lombok.*;
 @Setter
 @Getter
 @Builder
+@EqualsAndHashCode
 public class QuestionInfoDto {
 
     private Long id;

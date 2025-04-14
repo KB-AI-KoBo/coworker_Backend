@@ -12,9 +12,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import static com.kobo.coworker.document.fixture.TestFixture.createSampleDocument;
+import static com.kobo.coworker.user.fixture.TestFixture.createSampleUser;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
 public class QuestionControllerTest {
@@ -39,7 +40,23 @@ public class QuestionControllerTest {
         @Test
         @DisplayName("질문 id 조회 시 해당 id의 QuestionInfoDto가 반환된다.")
         void getQuestionInfoDtoById_returnsMatchingDto() {
+            Long expectedId = 1L;
 
+            QuestionInfoDto expectedQuestionDto = QuestionInfoDto.builder()
+                    .id(expectedId)
+                    .document(createSampleDocument())
+                    .user(createSampleUser())
+                    .content("오늘 IT 업계 주식 현황 알려줘")
+                    .build();
+
+            when(service.getQuestionInfoDtoById(expectedId)).thenReturn(expectedQuestionDto);
+
+            QuestionInfoDto questionInfoDto = controller.getQuestionById(expectedId);
+
+            assertThat(questionInfoDto.getId()).isEqualTo(expectedQuestionDto.getId());
+            assertThat(questionInfoDto.getContent()).isEqualTo(expectedQuestionDto.getContent());
+            assertThat(questionInfoDto.getUser().getUsername()).isEqualTo(expectedQuestionDto.getUser().getUsername());
+            assertThat(questionInfoDto.getDocument().getFileUrl()).isEqualTo(expectedQuestionDto.getDocument().getFileUrl());
         }
 
         @Test

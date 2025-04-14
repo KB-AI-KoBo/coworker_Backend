@@ -1,9 +1,7 @@
 package com.kobo.coworker.user.domain;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import java.time.LocalDateTime;
