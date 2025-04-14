@@ -30,7 +30,7 @@ public class UserController {
     @PostMapping("/signup")
     public ResponseEntity<ApiResponse<UserInfoDto>> signup(@Valid @RequestBody UserSignupReqDto userSignupReqDto) {
         UserInfoDto savedUser = userService.signUp(userSignupReqDto);
-        return ResponseEntity.ok(ApiResponse.of(SuccessStatus._OK, savedUser));
+        return ResponseEntity.ok(ApiResponse.onSuccess(savedUser));
     }
 
     @GetMapping("/profile")

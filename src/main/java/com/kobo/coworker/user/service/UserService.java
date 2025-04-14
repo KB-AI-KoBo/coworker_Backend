@@ -23,7 +23,7 @@ public class UserService {
 
     @Transactional
     public UserInfoDto signUp(UserSignupReqDto request) {
-        ensureEmailIsUnique(request);
+        ensureUserNotExists(request);
 
         User user = buildUserWithEncodedPassword(request);
         savedUser(user);
@@ -31,8 +31,8 @@ public class UserService {
         return UserInfoDto.fromEntity(user);
     }
 
-    private void ensureEmailIsUnique(UserSignupReqDto request) {
-        if (userRepository.findByEmail(request.getEmail()).isEmpty()) {
+    public void ensureUserNotExists(UserSignupReqDto request) {
+        if (userRepository.findByUsername(request.getUsername()).isPresent()) {
             throw new GeneralException(ErrorStatus.USER_ALREADY_EXISTS);
         }
     }
