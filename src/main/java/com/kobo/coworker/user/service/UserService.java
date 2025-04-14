@@ -32,7 +32,7 @@ public class UserService {
     }
 
     private void ensureEmailIsUnique(UserSignupReqDto request) {
-        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
+        if (userRepository.findByEmail(request.getEmail()).isEmpty()) {
             throw new GeneralException(ErrorStatus.USER_ALREADY_EXISTS);
         }
     }
