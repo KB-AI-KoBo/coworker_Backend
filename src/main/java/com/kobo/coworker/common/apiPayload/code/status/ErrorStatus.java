@@ -35,7 +35,10 @@ public enum ErrorStatus implements BaseErrorCode {
     QUESTION_NOT_EXISTS(HttpStatus.NOT_FOUND, "QUESTION404", "존재하지 않는 질문입니다."),
 
     // 분석 결과 관련 에러
-    ANALYSIS_RESULT_NOT_EXISTS(HttpStatus.NOT_FOUND, "ANALYSIS404", "존재하지 않는 분석결과입니다.");
+    ANALYSIS_RESULT_NOT_EXISTS(HttpStatus.NOT_FOUND, "ANALYSIS404", "존재하지 않는 분석결과입니다."),
+
+    // 이메일 관련 에러
+    EMAIL_ALREADY_EXISTS(HttpStatus.CONFLICT, "EMAIL4002", "이미 존재하는 이메일입니다.");
 
     private final HttpStatus httpStatus;
     private final String code;
