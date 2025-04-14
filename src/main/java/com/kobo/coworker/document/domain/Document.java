@@ -26,4 +26,8 @@ public class Document {
     @CreationTimestamp
     private Timestamp uploadedAt;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private FileType fileType;
+
 }

@@ -26,10 +26,10 @@ import static org.mockito.Mockito.when;
 public class QuestionServiceTest {
 
     @Mock
-    QuestionRepository repository;
+    private QuestionRepository repository;
 
     @InjectMocks
-    QuestionService service;
+    private QuestionService service;
 
     private Question sampleQuestion;
     private QuestionInfoDto sampleQuestionInfoDto;

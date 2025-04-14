@@ -6,6 +6,7 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.kobo.coworker.common.apiPayload.code.status.ErrorStatus;
 import com.kobo.coworker.common.apiPayload.exception.GeneralException;
+import com.kobo.coworker.document.domain.FileType;
 import com.kobo.coworker.document.dto.DocumentInfoDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,7 +27,7 @@ public class S3UploadService {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
-    public DocumentInfoDto saveFile(Principal principal, MultipartFile multipartFile) {
+    public DocumentInfoDto saveFile(Principal principal, MultipartFile multipartFile, FileType fileType) {
         String username = principal.getName();
         String originalFileName = validateAndGetFileName(multipartFile);
         String s3Key = generateS3Key(username, originalFileName);
@@ -36,7 +37,7 @@ public class S3UploadService {
         uploadFileToS3(s3Key, multipartFile);
         String fileUrl = amazonS3.getUrl(bucket, s3Key).toString();
 
-        return buildDocumentInfo(originalFileName, fileUrl);
+        return buildDocumentInfo(originalFileName, fileUrl, fileType);
     }
 
     private String validateAndGetFileName(MultipartFile multipartFile) {
@@ -114,10 +115,11 @@ public class S3UploadService {
         return metadata;
     }
 
-    private DocumentInfoDto buildDocumentInfo(String originalFileName, String fileUrl) {
+    private DocumentInfoDto buildDocumentInfo(String originalFileName, String fileUrl, FileType fileType) {
         return DocumentInfoDto.builder()
                 .originalFilename(originalFileName)
                 .fileUrl(fileUrl)
+                .fileType(fileType)
                 .build();
     }
 

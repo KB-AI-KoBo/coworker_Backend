@@ -29,25 +29,23 @@ public class DocumentService {
 
     public DocumentInfoDto uploadDocument(Principal principal, MultipartFile multipartFile) {
         userService.ensureUserIsUnique(principal);
-        validateFileType(multipartFile);
-        return s3UploadService.saveFile(principal, multipartFile);
+        validateOriginalFileNameNotNull(multipartFile);
+
+        String extension = extractExtension(multipartFile);
+        validateFileType(extension);
+
+        return s3UploadService.saveFile(principal, multipartFile, FileType.fromExtension(extension));
     }
 
-    private void validateFileType(MultipartFile multipartFile) {
-        if (!FileType.isValid(extractFileType(multipartFile))) {
+    private void validateFileType(String extension) {
+        if (!FileType.isValidExtension(extension)) {
             throw new GeneralException(ErrorStatus.DOCUMENT_INVALID_FILE_TYPE);
         }
     }
 
-    private FileType extractFileType(MultipartFile multipartFile) {
-        String requiredFileName = getNonNullOriginalFileName(multipartFile);
-        String extension = FilenameUtils.getExtension(requiredFileName).toUpperCase();
-        return FileType.valueOf(extension);
-    }
-
-    private String getNonNullOriginalFileName(MultipartFile multipartFile) {
+    private String extractExtension(MultipartFile multipartFile) {
         validateOriginalFileNameNotNull(multipartFile);
-        return multipartFile.getOriginalFilename();
+        return FilenameUtils.getExtension(multipartFile.getOriginalFilename());
     }
 
     public static void validateOriginalFileNameNotNull(MultipartFile multipartFile) {

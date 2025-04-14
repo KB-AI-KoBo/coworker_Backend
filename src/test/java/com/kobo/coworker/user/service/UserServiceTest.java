@@ -26,7 +26,7 @@ import static org.mockito.Mockito.when;
 public class UserServiceTest {
 
     @Mock
-    UserRepository repository;
+    private UserRepository repository;
 
     @Spy
     private PasswordEncoder passwordEncoder;
