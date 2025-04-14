@@ -98,6 +98,20 @@ public class QuestionServiceTest {
             assertThat(questionInfoDto.getUser()).isEqualTo(question.getUser());
             assertThat(questionInfoDto.getDocument()).isEqualTo(question.getDocument());
         }
+
+        @Test
+        @DisplayName("삭제된 질문 객체는 조회되지 않는다.")
+        void returnNonQuestionObject_WhenQuestionIdDoNotExists(){
+            Question question = sampleQuestion;
+
+            assertThatThrownBy(() -> service.deleteQuestion(question.getId()))
+                    .isInstanceOf(GeneralException.class)
+                    .satisfies(e -> {
+                        GeneralException ex = (GeneralException) e;
+                        assertThat((ErrorStatus) ex.getCode()).isEqualTo(ErrorStatus.QUESTION_NOT_EXISTS);
+                    });
+        }
+
     }
 
 }
