@@ -53,7 +53,7 @@ public class UserService {
 
     @Transactional
     public UserInfoDto updateUser(Principal principal, UpdatedUserReqDto updatedUserReqDto) {
-        User user = findUserWithUniqueUsername(principal.getName());
+        User user = findUserWithUniqueEmail(principal.getName());
 
         updateFieldIfPresent(updatedUserReqDto.getUsername(), user::setUsername);
         updateFieldIfPresent(updatedUserReqDto.getPassword(), password -> user.setPassword(passwordEncoder.encode(password)));
@@ -112,7 +112,7 @@ public class UserService {
     }
 
     public void ensureUserIsUnique(Principal principal) {
-        userRepository.findByUsername(principal.getName())
+        userRepository.findByEmail(principal.getName())
                 .orElseThrow(() -> new GeneralException(ErrorStatus.USER_ALREADY_EXISTS));
     }
 

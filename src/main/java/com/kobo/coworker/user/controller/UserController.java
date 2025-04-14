@@ -1,7 +1,6 @@
 package com.kobo.coworker.user.controller;
 
 import com.kobo.coworker.common.apiPayload.ApiResponse;
-import com.kobo.coworker.common.apiPayload.code.status.SuccessStatus;
 import com.kobo.coworker.user.domain.User;
 import com.kobo.coworker.user.dto.req.UpdatedUserReqDto;
 import com.kobo.coworker.user.dto.req.UserSignupReqDto;
@@ -35,7 +34,7 @@ public class UserController {
 
     @GetMapping("/profile")
     public ResponseEntity<User> getProfile(Principal principal) {
-        User user = userRepository.findByUsername(principal.getName())
+        User user = userRepository.findByEmail(principal.getName())
                 .orElseThrow(() -> new RuntimeException("회원가입하지 않은 사용자입니다."));
 
         return ResponseEntity.ok(user);
