@@ -17,9 +17,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 import static com.kobo.coworker.document.fixture.TestFixture.createSampleDocument;
 import static com.kobo.coworker.user.fixture.TestFixture.createSampleUser;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -55,9 +55,10 @@ public class QuestionServiceTest {
 
             when(repository.save(any(Question.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
-            Question savedQuestion = repository.save(question);
+            assertThatCode(() -> repository.save(question))
+                    .doesNotThrowAnyException();
 
-            assertThat(savedQuestion).isEqualTo(question);
+            verify(repository).save(question);
         }
 
         @Test
@@ -100,16 +101,16 @@ public class QuestionServiceTest {
         }
 
         @Test
-        @DisplayName("삭제된 질문 객체는 조회되지 않는다.")
-        void returnNonQuestionObject_WhenQuestionIdDoNotExists(){
-            Question question = sampleQuestion;
+        @DisplayName("존재하는 질문 ID로 삭제 요청 시 정상적으로 삭제된다.")
+        void shouldDeleteQuestion_WhenIdExists() {
+            Long existingId = 1L;
 
-            assertThatThrownBy(() -> service.deleteQuestion(question.getId()))
-                    .isInstanceOf(GeneralException.class)
-                    .satisfies(e -> {
-                        GeneralException ex = (GeneralException) e;
-                        assertThat((ErrorStatus) ex.getCode()).isEqualTo(ErrorStatus.QUESTION_NOT_EXISTS);
-                    });
+            when(repository.existsById(existingId)).thenReturn(true);
+
+            assertThatCode(() -> service.deleteQuestion(existingId))
+                    .doesNotThrowAnyException();
+
+            verify(repository).deleteById(existingId);
         }
 
     }
