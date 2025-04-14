@@ -15,8 +15,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
+import static com.kobo.coworker.document.fixture.TestFixture.createSampleDocument;
+import static com.kobo.coworker.user.fixture.TestFixture.createSampleUser;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -40,6 +43,22 @@ public class QuestionServiceTest {
     @Nested
     @DisplayName("질문 관련 서비스 테스트")
     class questionTest {
+
+        @Test
+        @DisplayName("save() 호출 시 질문 엔티티가 성공적으로 저장된다.")
+        void saveQuestion_success() {
+            Question question = Question.builder()
+                    .document(createSampleDocument())
+                    .user(createSampleUser())
+                    .content("오늘 IT 업계 주식 현황 알려줘")
+                    .build();
+
+            when(repository.save(any(Question.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+            Question savedQuestion = repository.save(question);
+
+            assertThat(savedQuestion).isEqualTo(question);
+        }
 
         @Test
         @DisplayName("QuestionInfoDto -> Question 변환 시 필드 값이 정확히 매핑된다.")
