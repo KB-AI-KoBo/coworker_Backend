@@ -25,7 +25,7 @@ public class QuestionInfoDto {
 
     public Question toEntity() {
         return Question.builder()
-                .questionId(questionId)
+                .id(questionId)
                 .document(document)
                 .user(user)
                 .content(content)
@@ -34,7 +34,7 @@ public class QuestionInfoDto {
 
     public static QuestionInfoDto fromEntity(Question question) {
         return QuestionInfoDto.builder()
-                .questionId(question.getQuestionId())
+                .questionId(question.getId())
                 .document(question.getDocument())
                 .user(question.getUser())
                 .content(question.getContent())

@@ -75,7 +75,7 @@ public class QuestionService {
         questionRepository.deleteById(id);
     }
 
-    private void ensureQuestionExistsById(Long id) {
+    public void ensureQuestionExistsById(Long id) {
         if (!questionRepository.existsById(id)) {
             throw new GeneralException(ErrorStatus.QUESTION_NOT_EXISTS);
         }
