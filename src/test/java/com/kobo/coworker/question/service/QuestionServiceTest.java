@@ -94,7 +94,7 @@ public class QuestionServiceTest {
 
             QuestionInfoDto questionInfoDto = service.getQuestionInfoDtoById(sampleQuestion.getId());
 
-            assertThat(questionInfoDto.getQuestionId()).isEqualTo(question.getId());
+            assertThat(questionInfoDto.getId()).isEqualTo(question.getId());
             assertThat(questionInfoDto.getContent()).isEqualTo(question.getContent());
             assertThat(questionInfoDto.getUser()).isEqualTo(question.getUser());
             assertThat(questionInfoDto.getDocument()).isEqualTo(question.getDocument());

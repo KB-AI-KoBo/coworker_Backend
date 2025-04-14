@@ -10,14 +10,14 @@ import lombok.*;
 @Builder
 public class QuestionInfoDto {
 
-    private Long questionId;
+    private Long id;
     private Document document;
     private User user;
     private String content;
 
     @Builder
-    public QuestionInfoDto(Long questionId, Document document, User user, String content) {
-        this.questionId = questionId;
+    public QuestionInfoDto(Long id, Document document, User user, String content) {
+        this.id = id;
         this.document = document;
         this.user = user;
         this.content = content;
@@ -25,7 +25,7 @@ public class QuestionInfoDto {
 
     public Question toEntity() {
         return Question.builder()
-                .id(questionId)
+                .id(id)
                 .document(document)
                 .user(user)
                 .content(content)
@@ -34,7 +34,7 @@ public class QuestionInfoDto {
 
     public static QuestionInfoDto fromEntity(Question question) {
         return QuestionInfoDto.builder()
-                .questionId(question.getId())
+                .id(question.getId())
                 .document(question.getDocument())
                 .user(question.getUser())
                 .content(question.getContent())
