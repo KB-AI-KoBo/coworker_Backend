@@ -12,7 +12,7 @@ public class Question {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long questionId;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(nullable = true)
@@ -26,8 +26,8 @@ public class Question {
     private String content;
 
     @Builder
-    public Question(Long questionId, Document document, User user, String content) {
-        this.questionId = questionId;
+    public Question(Long id, Document document, User user, String content) {
+        this.id = id;
         this.document = document;
         this.user = user;
         this.content = content;
