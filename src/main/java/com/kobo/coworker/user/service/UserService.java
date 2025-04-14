@@ -110,9 +110,10 @@ public class UserService {
         user.setPassword(encryptedPassword);
     }
 
-    public void ensureUserIsUnique(Principal principal) {
-        userRepository.findByEmail(principal.getName())
-                .orElseThrow(() -> new GeneralException(ErrorStatus.USER_ALREADY_EXISTS));
+    public void ensureUserIsPresent(Principal principal) {
+        if(userRepository.findByUsername(principal.getName()).isEmpty()) {
+            throw new GeneralException(ErrorStatus._UNAUTHORIZED);
+        }
     }
 
 }

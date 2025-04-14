@@ -94,7 +94,7 @@ public class DocumentServiceTest {
             DocumentInfoDto documentInfoDto = sampleDocumentInfoDto;
             FileType validFileType = documentInfoDto.getFileType();
 
-            doNothing().when(userService).ensureUserIsUnique(mockPrincipal);
+            doNothing().when(userService).ensureUserIsPresent(mockPrincipal);
             when(s3UploadService.saveFile(eq(mockPrincipal), eq(multipartFile), eq(validFileType)))
                     .thenReturn(documentInfoDto);
 
@@ -104,7 +104,7 @@ public class DocumentServiceTest {
             assertThat(result.getOriginalFilename()).isEqualTo("test.pdf");
             assertThat(result.getFileUrl()).isEqualTo("https://coworker.s3.ap-northeast-2.amazonaws.com/세은/test.pdf");
 
-            verify(userService).ensureUserIsUnique(mockPrincipal);
+            verify(userService).ensureUserIsPresent(mockPrincipal);
             verify(s3UploadService).saveFile(eq(mockPrincipal), eq(multipartFile), eq(validFileType));
         }
 

@@ -28,7 +28,7 @@ public class DocumentService {
     }
 
     public DocumentInfoDto uploadDocument(Principal principal, MultipartFile multipartFile) {
-        userService.ensureUserIsUnique(principal);
+        userService.ensureUserIsPresent(principal);
         validateOriginalFileNameNotNull(multipartFile);
 
         String extension = extractExtension(multipartFile);
