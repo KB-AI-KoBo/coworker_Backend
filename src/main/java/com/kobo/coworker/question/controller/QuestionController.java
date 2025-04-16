@@ -24,7 +24,7 @@ public class QuestionController {
         this.aiClient = aiClient;
     }
 
-    @PostMapping
+    @PostMapping("/submit")
     public String submitQuestionForRequestAnalysis(
             @AuthenticationPrincipal UserDetails user,
             @RequestBody QuestionReqDto questionReqDto) {
