@@ -3,9 +3,11 @@ package com.kobo.coworker.question.service;
 import com.kobo.coworker.common.apiPayload.code.status.ErrorStatus;
 import com.kobo.coworker.common.apiPayload.exception.GeneralException;
 import com.kobo.coworker.document.domain.Document;
+import com.kobo.coworker.document.mapper.DocumentMapper;
 import com.kobo.coworker.document.service.DocumentService;
 import com.kobo.coworker.question.domain.Question;
 import com.kobo.coworker.question.dto.QuestionInfoDto;
+import com.kobo.coworker.question.dto.QuestionReqDto;
 import com.kobo.coworker.question.repository.QuestionRepository;
 import com.kobo.coworker.user.domain.User;
 import com.kobo.coworker.user.service.UserService;
@@ -30,55 +32,62 @@ public class QuestionService {
     }
 
     @Transactional
-    public void submitQuestion(String username, Document document, String content) {
-        User user = getUserByUsername(username);
-        validDocumentByFileUrl(document.getFileUrl());
-        Question question = createQuestionEntity(user, document, content);
-        saveQuestion(question);
+    public void submitQuestion(String username, QuestionReqDto dto) {
+        User user = getUser(username);
+        Document document = createAndValidateDocumentIfExists(dto);
+
+        Question question = createQuestion(user, document, dto.getContent());
+        save(question);
     }
 
-    private User getUserByUsername(String username) {
+    private User getUser(String username) {
         return userService.findUserWithUniqueUsername(username);
     }
 
-    private void validDocumentByFileUrl(String fileUrl) {
+    private Document createAndValidateDocumentIfExists(QuestionReqDto dto) {
+        if (!dto.hasDocument()) return null;
+
+        Document document = DocumentMapper.toEntity(dto.getDocument());
+        validateDocumentUniqueness(document.getFileUrl());
+        return document;
+    }
+
+    private void validateDocumentUniqueness(String fileUrl) {
         documentService.validateDocumentFileUrlUniqueness(fileUrl);
     }
 
-    private Question createQuestionEntity(User user, Document document, String content) {
-        QuestionInfoDto questionInfoDto = QuestionInfoDto.builder()
+    private Question createQuestion(User user, Document document, String content) {
+        return QuestionInfoDto.builder()
                 .user(user)
                 .document(document)
                 .content(content)
-                .build();
-        return questionInfoDto.toEntity();
+                .build()
+                .toEntity();
     }
 
-    private void saveQuestion(Question question) {
+    private void save(Question question) {
         questionRepository.save(question);
     }
 
     @Transactional
     public QuestionInfoDto getQuestionInfoDtoById(Long id) {
-        Question question = findQuestionIdWithExists(id);
-        return QuestionInfoDto.fromEntity(question);
+        return QuestionInfoDto.fromEntity(findQuestionById(id));
     }
 
-    private Question findQuestionIdWithExists(Long id) {
+    private Question findQuestionById(Long id) {
         return questionRepository.findById(id)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.QUESTION_NOT_EXISTS));
     }
 
     @Transactional
     public void deleteQuestion(Long id) {
-        ensureQuestionExistsById(id);
+        checkQuestionExists(id);
         questionRepository.deleteById(id);
     }
 
-    public void ensureQuestionExistsById(Long id) {
+    private void checkQuestionExists(Long id) {
         if (!questionRepository.existsById(id)) {
             throw new GeneralException(ErrorStatus.QUESTION_NOT_EXISTS);
         }
     }
-
 }

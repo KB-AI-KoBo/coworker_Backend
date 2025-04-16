@@ -2,6 +2,7 @@ package com.kobo.coworker.question.controller;
 
 import com.kobo.coworker.AI.AIClient;
 import com.kobo.coworker.common.apiPayload.code.status.SuccessStatus;
+import com.kobo.coworker.document.mapper.DocumentMapper;
 import com.kobo.coworker.question.dto.QuestionInfoDto;
 import com.kobo.coworker.question.dto.QuestionReqDto;
 import com.kobo.coworker.question.service.QuestionService;
@@ -28,11 +29,15 @@ public class QuestionController {
     public String submitQuestionForRequestAnalysis(
             @AuthenticationPrincipal UserDetails user,
             @RequestBody QuestionReqDto questionReqDto) {
-        Document document = questionReqDto.getDocument();
-        String content = questionReqDto.getContent();
 
-        questionService.submitQuestion(user.getUsername(), document, content);
-        return aiClient.analyzeQuestion(document, content);
+        questionService.submitQuestion(user.getUsername(), questionReqDto);
+
+        if (!questionReqDto.hasDocument()) {
+            return aiClient.analyzeQuestion(questionReqDto.getContent());
+        }
+
+        Document document = DocumentMapper.toEntity(questionReqDto.getDocument());
+        return aiClient.analyzeQuestionAndDocument(document, questionReqDto.getContent());
     }
 
     @GetMapping("/{id}")
