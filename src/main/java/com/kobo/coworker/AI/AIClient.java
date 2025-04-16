@@ -4,6 +4,7 @@ import com.kobo.coworker.common.apiPayload.code.status.ErrorStatus;
 import com.kobo.coworker.common.apiPayload.exception.GeneralException;
 import com.kobo.coworker.document.domain.Document;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.net.URI;
@@ -16,14 +17,15 @@ import java.time.Duration;
 @Component
 public class AIClient {
 
-    private static final String AI_SERVER_URL = "http://coworkerkobo.shop/";
     private static final Duration TIMEOUT = Duration.ofMinutes(30);
     private final HttpClient client;
+    private final String aiServerUrl;
 
-    public AIClient() {
+    public AIClient(@Value("${AI.server.url}") String aiServerUrl) {
         this.client = HttpClient.newBuilder()
                 .connectTimeout(TIMEOUT)
                 .build();
+        this.aiServerUrl = aiServerUrl;
     }
 
     public String analyzeQuestion(Document document, String content) {
@@ -51,7 +53,7 @@ public class AIClient {
 
     private URI createUri() {
         try {
-            return new URI(AI_SERVER_URL);
+            return new URI(aiServerUrl);
         } catch (URISyntaxException e) {
             throw new GeneralException(ErrorStatus.AI_SERVER_INVALID_URI);
         }

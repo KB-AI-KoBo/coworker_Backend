@@ -55,6 +55,10 @@ openai:
   api:
     key: ${OPENAI_API_KEY}
 
+AI:
+  server:
+    url: ${AI_SERVER_URL}
+
 cloud:
   aws:
     s3:
