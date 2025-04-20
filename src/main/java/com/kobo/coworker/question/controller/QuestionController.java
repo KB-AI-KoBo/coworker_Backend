@@ -37,7 +37,6 @@ public class QuestionController {
         if (file != null && !file.isEmpty()) {
             DocumentInfoDto documentInfoDto = documentService.uploadDocument(email, file);
             document = documentInfoDto.toEntity();
-            questionService.submitQuestion(email, document, content);
         }
 
         questionService.submitQuestion(email, document, content);
