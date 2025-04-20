@@ -37,12 +37,14 @@ public class AIClient {
         return handleResponse(response);
     }
 
-    private String buildRequestBody(String email, Document document, String content) {
+    private String buildRequestBody(String email, Document file, String content) {
         JSONObject json = new JSONObject();
         json.put("email", email);
-        if (ensureDocumentIsPresent(document)) {
-            json.put("originalFilename", document.getOriginalFilename());
-            json.put("fileUrl", document.getFileUrl());
+        if (ensureDocumentIsPresent(file)) {
+            JSONObject document = new JSONObject();
+            document.put("originalFilename", file.getOriginalFilename());
+            document.put("fileUrl", file.getFileUrl());
+            json.put("document", document);
         }
         json.put("content", content);
         return json.toString();
