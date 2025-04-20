@@ -29,7 +29,7 @@ public class QuestionController {
 
     @PostMapping(value = "/submit", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public String submitQuestion(
-            String email,
+            @RequestParam("email") String email,
             @RequestPart(value = "file", required = false) MultipartFile file,
             @RequestPart("content") String content) {
 
