@@ -12,6 +12,7 @@ import com.kobo.coworker.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class QuestionService {
@@ -32,7 +33,11 @@ public class QuestionService {
     @Transactional
     public void submitQuestion(String username, Document document, String content) {
         User user = getUserByUsername(username);
-        validDocumentByFileUrl(document.getFileUrl());
+
+        if (document != null) {
+            validDocumentByFileUrl(document.getFileUrl());
+        }
+
         Question question = createQuestionEntity(user, document, content);
         saveQuestion(question);
     }

@@ -2,7 +2,6 @@ package com.kobo.coworker.question.fixture;
 
 import com.kobo.coworker.question.domain.Question;
 import com.kobo.coworker.question.dto.QuestionInfoDto;
-import com.kobo.coworker.question.dto.QuestionReqDto;
 
 import static com.kobo.coworker.document.fixture.TestFixture.createSampleDocument;
 import static com.kobo.coworker.user.fixture.TestFixture.createSampleUser;
