@@ -1,4 +1,4 @@
-package com.kobo.coworker.AI;
+package com.kobo.coworker.common;
 
 import com.kobo.coworker.common.apiPayload.code.status.ErrorStatus;
 import com.kobo.coworker.common.apiPayload.exception.GeneralException;

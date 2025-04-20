@@ -1,19 +1,16 @@
 package com.kobo.coworker.question.controller;
 
-import com.kobo.coworker.AI.AIClient;
+import com.kobo.coworker.common.AIClient;
 import com.kobo.coworker.common.apiPayload.code.status.SuccessStatus;
 import com.kobo.coworker.document.dto.DocumentInfoDto;
 import com.kobo.coworker.document.service.DocumentService;
 import com.kobo.coworker.question.dto.QuestionInfoDto;
 import com.kobo.coworker.question.service.QuestionService;
 import com.kobo.coworker.document.domain.Document;
-import com.kobo.coworker.user.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.security.Principal;
 
 @RestController
 @RequestMapping("/api/questions")
