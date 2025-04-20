@@ -3,17 +3,16 @@ package com.kobo.coworker.question.service;
 import com.kobo.coworker.common.apiPayload.code.status.ErrorStatus;
 import com.kobo.coworker.common.apiPayload.exception.GeneralException;
 import com.kobo.coworker.document.domain.Document;
-import com.kobo.coworker.document.mapper.DocumentMapper;
 import com.kobo.coworker.document.service.DocumentService;
 import com.kobo.coworker.question.domain.Question;
 import com.kobo.coworker.question.dto.QuestionInfoDto;
-import com.kobo.coworker.question.dto.QuestionReqDto;
 import com.kobo.coworker.question.repository.QuestionRepository;
 import com.kobo.coworker.user.domain.User;
 import com.kobo.coworker.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class QuestionService {
@@ -32,62 +31,59 @@ public class QuestionService {
     }
 
     @Transactional
-    public void submitQuestion(String username, QuestionReqDto dto) {
-        User user = getUser(username);
-        Document document = createAndValidateDocumentIfExists(dto);
+    public void submitQuestion(String email, Document document, String content) {
+        User user = getUserByEmail(email);
 
-        Question question = createQuestion(user, document, dto.getContent());
-        save(question);
+        if (document != null) {
+            validDocumentByFileUrl(document.getFileUrl());
+        }
+
+        Question question = createQuestionEntity(user, document, content);
+        saveQuestion(question);
     }
 
-    private User getUser(String username) {
-        return userService.findUserWithUniqueUsername(username);
+    private User getUserByEmail(String email) {
+        return userService.findUserWithUniqueEmail(email);
     }
 
-    private Document createAndValidateDocumentIfExists(QuestionReqDto dto) {
-        if (!dto.hasDocument()) return null;
-
-        Document document = DocumentMapper.toEntity(dto.getDocument());
-        validateDocumentUniqueness(document.getFileUrl());
-        return document;
-    }
-
-    private void validateDocumentUniqueness(String fileUrl) {
+    private void validDocumentByFileUrl(String fileUrl) {
         documentService.validateDocumentFileUrlUniqueness(fileUrl);
     }
 
-    private Question createQuestion(User user, Document document, String content) {
-        return QuestionInfoDto.builder()
+    private Question createQuestionEntity(User user, Document document, String content) {
+        QuestionInfoDto questionInfoDto = QuestionInfoDto.builder()
                 .user(user)
                 .document(document)
                 .content(content)
-                .build()
-                .toEntity();
+                .build();
+        return questionInfoDto.toEntity();
     }
 
-    private void save(Question question) {
+    private void saveQuestion(Question question) {
         questionRepository.save(question);
     }
 
     @Transactional
     public QuestionInfoDto getQuestionInfoDtoById(Long id) {
-        return QuestionInfoDto.fromEntity(findQuestionById(id));
+        Question question = findQuestionIdWithExists(id);
+        return QuestionInfoDto.fromEntity(question);
     }
 
-    private Question findQuestionById(Long id) {
+    private Question findQuestionIdWithExists(Long id) {
         return questionRepository.findById(id)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.QUESTION_NOT_EXISTS));
     }
 
     @Transactional
     public void deleteQuestion(Long id) {
-        checkQuestionExists(id);
+        ensureQuestionExistsById(id);
         questionRepository.deleteById(id);
     }
 
-    private void checkQuestionExists(Long id) {
+    public void ensureQuestionExistsById(Long id) {
         if (!questionRepository.existsById(id)) {
             throw new GeneralException(ErrorStatus.QUESTION_NOT_EXISTS);
         }
     }
+
 }

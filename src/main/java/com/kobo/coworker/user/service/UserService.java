@@ -110,8 +110,8 @@ public class UserService {
         user.setPassword(encryptedPassword);
     }
 
-    public void ensureUserIsPresent(Principal principal) {
-        if(userRepository.findByUsername(principal.getName()).isEmpty()) {
+    public void ensureUserIsPresent(String email) {
+        if(userRepository.findByEmail(email).isEmpty()) {
             throw new GeneralException(ErrorStatus._UNAUTHORIZED);
         }
     }

@@ -6,6 +6,7 @@ import com.kobo.coworker.common.s3.S3UploadService;
 import com.kobo.coworker.document.domain.FileType;
 import com.kobo.coworker.document.dto.DocumentInfoDto;
 import com.kobo.coworker.document.repository.DocumentRepository;
+import com.kobo.coworker.user.domain.User;
 import com.kobo.coworker.user.service.UserService;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,14 +28,14 @@ public class DocumentService {
         this.documentRepository = documentRepository;
     }
 
-    public DocumentInfoDto uploadDocument(Principal principal, MultipartFile multipartFile) {
-        userService.ensureUserIsPresent(principal);
+    public DocumentInfoDto uploadDocument(String email, MultipartFile multipartFile) {
+        userService.ensureUserIsPresent(email);
         validateOriginalFileNameNotNull(multipartFile);
 
         String extension = extractExtension(multipartFile);
         validateFileType(extension);
 
-        return s3UploadService.saveFile(principal, multipartFile, FileType.fromExtension(extension));
+        return s3UploadService.saveFile(email, multipartFile, FileType.fromExtension(extension));
     }
 
     private void validateFileType(String extension) {
