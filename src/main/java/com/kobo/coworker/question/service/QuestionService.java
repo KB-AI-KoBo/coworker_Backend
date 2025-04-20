@@ -31,8 +31,8 @@ public class QuestionService {
     }
 
     @Transactional
-    public void submitQuestion(String username, Document document, String content) {
-        User user = getUserByUsername(username);
+    public void submitQuestion(String email, Document document, String content) {
+        User user = getUserByEmail(email);
 
         if (document != null) {
             validDocumentByFileUrl(document.getFileUrl());
@@ -42,8 +42,8 @@ public class QuestionService {
         saveQuestion(question);
     }
 
-    private User getUserByUsername(String username) {
-        return userService.findUserWithUniqueUsername(username);
+    private User getUserByEmail(String email) {
+        return userService.findUserWithUniqueEmail(email);
     }
 
     private void validDocumentByFileUrl(String fileUrl) {

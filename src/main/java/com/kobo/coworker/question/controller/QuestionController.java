@@ -7,6 +7,7 @@ import com.kobo.coworker.document.service.DocumentService;
 import com.kobo.coworker.question.dto.QuestionInfoDto;
 import com.kobo.coworker.question.service.QuestionService;
 import com.kobo.coworker.document.domain.Document;
+import com.kobo.coworker.user.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -31,19 +32,19 @@ public class QuestionController {
 
     @PostMapping(value = "/submit", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public String submitQuestion(
-            Principal principal,
+            String email,
             @RequestPart(value = "file", required = false) MultipartFile file,
             @RequestPart("content") String content) {
 
         Document document = null;
         if (file != null && !file.isEmpty()) {
-            DocumentInfoDto documentInfoDto = documentService.uploadDocument(principal, file);
+            DocumentInfoDto documentInfoDto = documentService.uploadDocument(email, file);
             document = documentInfoDto.toEntity();
-            questionService.submitQuestion(principal.getName(), document, content);
+            questionService.submitQuestion(email, document, content);
         }
 
-        questionService.submitQuestion(principal.getName(), document, content);
-        return aiClient.analyzeQuestion(document, content);
+        questionService.submitQuestion(email, document, content);
+        return aiClient.analyzeQuestion(email, document, content);
     }
 
     @GetMapping("/{id}")
