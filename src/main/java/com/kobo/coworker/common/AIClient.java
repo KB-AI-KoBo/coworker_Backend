@@ -51,7 +51,9 @@ public class AIClient {
     }
 
     private boolean ensureDocumentIsPresent(Document document) {
-        return document.getOriginalFilename() != null || document.getFileUrl() != null;
+        return document != null && (
+                document.getOriginalFilename() != null || document.getFileUrl() != null
+        );
     }
 
     private URI createUri() {
