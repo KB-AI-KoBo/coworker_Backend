@@ -6,27 +6,19 @@ import com.kobo.coworker.common.s3.S3UploadService;
 import com.kobo.coworker.document.domain.FileType;
 import com.kobo.coworker.document.dto.DocumentInfoDto;
 import com.kobo.coworker.document.repository.DocumentRepository;
-import com.kobo.coworker.user.domain.User;
 import com.kobo.coworker.user.service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.FilenameUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import java.security.Principal;
 
 @Service
+@RequiredArgsConstructor
 public class DocumentService {
 
     private final S3UploadService s3UploadService;
     private final UserService userService;
     private final DocumentRepository documentRepository;
-
-    @Autowired
-    public DocumentService(S3UploadService s3UploadService, UserService userService, DocumentRepository documentRepository) {
-        this.s3UploadService = s3UploadService;
-        this.userService = userService;
-        this.documentRepository = documentRepository;
-    }
 
     public DocumentInfoDto uploadDocument(String email, MultipartFile multipartFile) {
         userService.ensureUserIsPresent(email);
