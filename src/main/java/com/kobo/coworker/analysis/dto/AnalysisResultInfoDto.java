@@ -1,22 +1,37 @@
 package com.kobo.coworker.analysis.dto;
 
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import com.kobo.coworker.analysis.domain.AnalysisResult;
+import com.kobo.coworker.document.domain.Document;
+import lombok.*;
 
 @Getter
+@Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class AnalysisResultInfoDto {
-
-    private DocumentInfo document;
+    private Long analysisId;
+    private Document document;
     private String content;
     private String result;
     private int label;
 
-    @Data
-    public static class DocumentInfo {
-        private String originalFilename;
-        private String fileUrl;
+    public AnalysisResult toEntity() {
+        return AnalysisResult.builder()
+                .document(document)
+                .content(content)
+                .result(result)
+                .label(label)
+                .build();
     }
 
+    public static AnalysisResultInfoDto fromEntity(AnalysisResult entity) {
+        return AnalysisResultInfoDto.builder()
+                .analysisId(entity.getAnalysisId())
+                .document(entity.getDocument())
+                .content(entity.getContent())
+                .result(entity.getResult())
+                .label(entity.getLabel())
+                .build();
+    }
 }

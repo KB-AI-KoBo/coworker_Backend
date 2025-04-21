@@ -5,7 +5,6 @@ import com.kobo.coworker.analysis.dto.AnalysisResultInfoDto;
 import com.kobo.coworker.analysis.service.AnalysisService;
 import com.kobo.coworker.common.apiPayload.code.status.SuccessStatus;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -18,12 +17,6 @@ public class AnalysisController {
     @Autowired
     public AnalysisController(AnalysisService analysisService) {
         this.analysisService = analysisService;
-    }
-
-    @PostMapping
-    public ResponseEntity<SuccessStatus> receiveAnalysis(@RequestBody AnalysisResultInfoDto dto) {
-        analysisService.save(dto);
-        return ResponseEntity.ok(SuccessStatus._OK);
     }
 
     @GetMapping("/{id}")

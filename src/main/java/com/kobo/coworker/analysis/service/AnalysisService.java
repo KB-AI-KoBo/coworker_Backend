@@ -21,9 +21,10 @@ public class AnalysisService {
     }
 
     @Transactional
-    public void save(AnalysisResultInfoDto analysisResultInfoDto) {
-        AnalysisResult result = analysisResultInfoDto.toEntity();
-        analysisResultRepository.save(result);
+    public Long save(AnalysisResultInfoDto dto) {
+        AnalysisResult entity = dto.toEntity();
+        analysisResultRepository.save(entity);
+        return entity.getAnalysisId();
     }
 
     public AnalysisResultInfoDto getDtoById(Long id) {
