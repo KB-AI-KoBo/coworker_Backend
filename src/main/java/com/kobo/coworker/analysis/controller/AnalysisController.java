@@ -1,6 +1,5 @@
 package com.kobo.coworker.analysis.controller;
 
-import com.kobo.coworker.analysis.domain.AnalysisResult;
 import com.kobo.coworker.analysis.dto.AnalysisResultInfoDto;
 import com.kobo.coworker.analysis.service.AnalysisService;
 import com.kobo.coworker.common.apiPayload.code.status.SuccessStatus;

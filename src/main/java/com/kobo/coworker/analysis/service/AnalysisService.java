@@ -5,20 +5,17 @@ import com.kobo.coworker.analysis.dto.AnalysisResultInfoDto;
 import com.kobo.coworker.analysis.repository.AnalysisResultRepository;
 import com.kobo.coworker.common.apiPayload.code.status.ErrorStatus;
 import com.kobo.coworker.common.apiPayload.exception.GeneralException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class AnalysisService {
 
     private final AnalysisResultRepository analysisResultRepository;
-
-    @Autowired
-    public AnalysisService(AnalysisResultRepository analysisResultRepository) {
-        this.analysisResultRepository = analysisResultRepository;
-    }
 
     @Transactional
     public Long save(AnalysisResultInfoDto dto) {
