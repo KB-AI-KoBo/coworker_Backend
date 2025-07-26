@@ -8,6 +8,7 @@ import com.kobo.coworker.common.apiPayload.code.status.ErrorStatus;
 import com.kobo.coworker.common.apiPayload.exception.GeneralException;
 import com.kobo.coworker.document.domain.FileType;
 import com.kobo.coworker.document.dto.DocumentInfoDto;
+import com.kobo.coworker.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -27,12 +28,11 @@ public class S3UploadService {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
-    public DocumentInfoDto saveFile(Principal principal, MultipartFile multipartFile, FileType fileType) {
-        String username = principal.getName();
+    public DocumentInfoDto saveFile(String email, MultipartFile multipartFile, FileType fileType) {
         String originalFileName = validateAndGetFileName(multipartFile);
-        String s3Key = generateS3Key(username, originalFileName);
+        String s3Key = generateS3Key(email, originalFileName);
 
-        ensureUploadCapacity(username);
+        ensureUploadCapacity(email);
 
         uploadFileToS3(s3Key, multipartFile);
         String fileUrl = amazonS3.getUrl(bucket, s3Key).toString();
@@ -52,23 +52,23 @@ public class S3UploadService {
         }
     }
 
-    private String generateS3Key(String username, String fileName) {
-        return username + "/" + fileName;
+    private String generateS3Key(String email, String fileName) {
+        return email + "/" + fileName;
     }
 
     private void throwFileNameRequiredException() {
         throw new GeneralException(ErrorStatus.DOCUMENT_FILENAME_REQUIRED);
     }
 
-    private void ensureUploadCapacity(String username) {
-        List<S3ObjectSummary> userFiles = getUserFileListFromS3(username);
+    private void ensureUploadCapacity(String email) {
+        List<S3ObjectSummary> userFiles = getUserFileListFromS3(email);
         if (isUploadLimitExceeded(userFiles)) {
             removeOldestFile(userFiles);
         }
     }
 
-    private List<S3ObjectSummary> getUserFileListFromS3(String username) {
-        ObjectListing objectListing = amazonS3.listObjects(bucket, username + "/");
+    private List<S3ObjectSummary> getUserFileListFromS3(String email) {
+        ObjectListing objectListing = amazonS3.listObjects(bucket, email + "/");
         return objectListing.getObjectSummaries();
     }
 

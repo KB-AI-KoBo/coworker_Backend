@@ -1,4 +1,4 @@
-package com.kobo.coworker.AI;
+package com.kobo.coworker.common;
 
 import com.kobo.coworker.common.apiPayload.code.status.ErrorStatus;
 import com.kobo.coworker.common.apiPayload.exception.GeneralException;
@@ -28,8 +28,8 @@ public class AIClient {
         this.aiServerUrl = aiServerUrl;
     }
 
-    public String analyzeQuestion(Document document, String content) {
-        String requestBody = buildRequestBody(document, content);
+    public String analyzeQuestion(String email, Document document, String content) {
+        String requestBody = buildRequestBody(email, document, content);
         URI uri = createUri();
         HttpRequest request = buildHttpRequest(uri, requestBody);
         HttpResponse<String> response = sendSafeRequest(request);
@@ -37,18 +37,23 @@ public class AIClient {
         return handleResponse(response);
     }
 
-    private String buildRequestBody(Document document, String content) {
+    private String buildRequestBody(String email, Document file, String content) {
         JSONObject json = new JSONObject();
-        if (ensureDocumentIsPresent(document)) {
-            json.put("originalFilename", document.getOriginalFilename());
-            json.put("fileUrl", document.getFileUrl());
+        json.put("email", email);
+        if (ensureDocumentIsPresent(file)) {
+            JSONObject document = new JSONObject();
+            document.put("originalFilename", file.getOriginalFilename());
+            document.put("fileUrl", file.getFileUrl());
+            json.put("document", document);
         }
         json.put("content", content);
         return json.toString();
     }
 
     private boolean ensureDocumentIsPresent(Document document) {
-        return document.getOriginalFilename() != null || document.getFileUrl() != null;
+        return document != null && (
+                document.getOriginalFilename() != null || document.getFileUrl() != null
+        );
     }
 
     private URI createUri() {

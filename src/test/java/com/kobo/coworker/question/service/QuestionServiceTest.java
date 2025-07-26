@@ -77,7 +77,7 @@ public class QuestionServiceTest {
         void throwQuestionNotExistsException_WhenQuestionIdDoesNotExists() {
             Long nonExistsId = 999L;
 
-            assertThatThrownBy(() -> service.ensureQuestionExistsById(nonExistsId))
+            assertThatThrownBy(() -> service.getQuestionInfoDtoById(nonExistsId))
                     .isInstanceOf(GeneralException.class)
                     .satisfies(e -> {
                         GeneralException ex = (GeneralException) e;

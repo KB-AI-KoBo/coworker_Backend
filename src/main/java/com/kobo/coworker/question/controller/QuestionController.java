@@ -1,38 +1,34 @@
 package com.kobo.coworker.question.controller;
 
-import com.kobo.coworker.AI.AIClient;
+import com.kobo.coworker.analysis.dto.AnalysisResultInfoDto;
 import com.kobo.coworker.common.apiPayload.code.status.SuccessStatus;
 import com.kobo.coworker.question.dto.QuestionInfoDto;
-import com.kobo.coworker.question.dto.QuestionReqDto;
 import com.kobo.coworker.question.service.QuestionService;
-import com.kobo.coworker.document.domain.Document;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/questions")
 public class QuestionController {
 
     private final QuestionService questionService;
-    private final AIClient aiClient;
 
     @Autowired
-    public QuestionController(QuestionService questionService, AIClient aiClient) {
+    public QuestionController(QuestionService questionService) {
         this.questionService = questionService;
-        this.aiClient = aiClient;
     }
 
-    @PostMapping("/submit")
-    public String submitQuestionForRequestAnalysis(
-            @AuthenticationPrincipal UserDetails user,
-            @RequestBody QuestionReqDto questionReqDto) {
-        Document document = questionReqDto.getDocument();
-        String content = questionReqDto.getContent();
+    @PostMapping(value = "/submit", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<AnalysisResultInfoDto> submitQuestion(
+            @RequestParam("email") String email,
+            @RequestPart(value = "file", required = false) MultipartFile file,
+            @RequestPart("content") String content) {
 
-        questionService.submitQuestion(user.getUsername(), document, content);
-        return aiClient.analyzeQuestion(document, content);
+        AnalysisResultInfoDto result = questionService.handleQuestionSubmission(email, file, content);
+        return ResponseEntity.ok(result);
     }
 
     @GetMapping("/{id}")
