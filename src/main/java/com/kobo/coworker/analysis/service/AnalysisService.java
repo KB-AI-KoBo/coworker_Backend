@@ -6,7 +6,6 @@ import com.kobo.coworker.analysis.repository.AnalysisResultRepository;
 import com.kobo.coworker.common.apiPayload.code.status.ErrorStatus;
 import com.kobo.coworker.common.apiPayload.exception.GeneralException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
@@ -19,11 +18,10 @@ public class AnalysisService {
 
     @Transactional
     public Long save(AnalysisResultInfoDto dto) {
-        AnalysisResult entity = dto.toEntity();
-        analysisResultRepository.save(entity);
-        return entity.getAnalysisId();
+        return analysisResultRepository.save(dto.toEntity()).getAnalysisId();
     }
 
+    @Transactional(readOnly = true)
     public AnalysisResultInfoDto getDtoById(Long id) {
         AnalysisResult analysisResult = getDtoByDocumentIdOrThrow(id);
         return AnalysisResultInfoDto.fromEntity(analysisResult);
@@ -34,13 +32,21 @@ public class AnalysisService {
                 .orElseThrow(() -> new GeneralException(ErrorStatus.ANALYSIS_RESULT_NOT_EXISTS));
     }
 
+    @Transactional(readOnly = true)
     public List<AnalysisResultInfoDto> findAnalysisResultsByDocumentId(Long documentId) {
         return analysisResultRepository.findByDocumentId(documentId).stream()
                 .map(AnalysisResultInfoDto::fromEntity)
                 .toList();
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
+    public List<AnalysisResultInfoDto> findAnalysisResultsByQuestionId(Long questionId) {
+        return analysisResultRepository.findByQuestionId(questionId).stream()
+                .map(AnalysisResultInfoDto::fromEntity)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
     public void deleteById(Long id) {
         analysisResultRepository.deleteById(findByIdOrThrow(id).getAnalysisId());
     }

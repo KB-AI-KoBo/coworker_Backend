@@ -28,8 +28,8 @@ public class AuthService {
             throw new RuntimeException("비밀번호가 일치하지 않습니다.");
         }
 
-        String accessToken = tokenProvider.createAccessToken(user.getId().toString(), user.getUsername());
-        String refreshToken = tokenProvider.createRefreshToken(user.getId().toString(), user.getUsername());
+        String accessToken = tokenProvider.createAccessToken(user.getId().toString(), user.getEmail());
+        String refreshToken = tokenProvider.createRefreshToken(user.getId().toString(), user.getEmail());
 
         return TokenDto.builder()
                 .access_token(accessToken)

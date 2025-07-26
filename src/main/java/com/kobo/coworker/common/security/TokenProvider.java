@@ -28,13 +28,25 @@ public class TokenProvider {
         this.refreshTokenValidityTime = refreshTokenValidityTime;
     }
 
-    public String createAccessToken(String userId, String username) {
+    public String createAccessToken(String userId, String email) {
         long nowTime = (new Date()).getTime();
         Date expiration = new Date(nowTime + accessTokenValidityTime);
 
         return Jwts.builder()
                 .setSubject(userId)
-                .claim(USERNAME_CLAIM, username)
+                .claim(USERNAME_CLAIM, email)
+                .setExpiration(expiration)
+                .signWith(key, SignatureAlgorithm.HS256)
+                .compact();
+    }
+
+    public String createRefreshToken(String userId, String email) {
+        long nowTime = (new Date()).getTime();
+        Date expiration = new Date(nowTime + refreshTokenValidityTime);
+
+        return Jwts.builder()
+                .setSubject(userId)
+                .claim(USERNAME_CLAIM, email)
                 .setExpiration(expiration)
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
@@ -48,10 +60,6 @@ public class TokenProvider {
         return extractClaims(token).get(USERNAME_CLAIM, String.class);
     }
 
-    public boolean isTokenExpired(String token) {
-        return extractClaims(token).getExpiration().before(new Date());
-    }
-
     public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
@@ -61,16 +69,8 @@ public class TokenProvider {
         }
     }
 
-    public String createRefreshToken(String userId, String username) {
-        long nowTime = (new Date()).getTime();
-        Date expiration = new Date(nowTime + refreshTokenValidityTime);
-
-        return Jwts.builder()
-                .setSubject(userId)
-                .claim(USERNAME_CLAIM, username)
-                .setExpiration(expiration)
-                .signWith(key, SignatureAlgorithm.HS256)
-                .compact();
+    public boolean isTokenExpired(String token) {
+        return extractClaims(token).getExpiration().before(new Date());
     }
 
 }

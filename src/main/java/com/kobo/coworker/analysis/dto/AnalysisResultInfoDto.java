@@ -11,6 +11,7 @@ import lombok.*;
 @Builder
 public class AnalysisResultInfoDto {
     private Long analysisId;
+    private Long questionId;
     private Document document;
     private String content;
     private String result;
@@ -18,6 +19,7 @@ public class AnalysisResultInfoDto {
 
     public AnalysisResult toEntity() {
         return AnalysisResult.builder()
+                .questionId(questionId)
                 .document(document)
                 .content(content)
                 .result(result)
@@ -28,6 +30,7 @@ public class AnalysisResultInfoDto {
     public static AnalysisResultInfoDto fromEntity(AnalysisResult entity) {
         return AnalysisResultInfoDto.builder()
                 .analysisId(entity.getAnalysisId())
+                .questionId(entity.getQuestionId())
                 .document(entity.getDocument())
                 .content(entity.getContent())
                 .result(entity.getResult())

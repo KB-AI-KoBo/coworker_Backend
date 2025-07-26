@@ -30,13 +30,12 @@ public class AuthController {
 
     @PostMapping("/delete")
     public ResponseEntity<String> deleteAccount(Principal principal) {
-        String username = principal.getName();
+        String email = principal.getName();
 
-        User user = userRepository.findByUsername(username)
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 존재하지 않습니다."));
 
         userRepository.delete(user);
-
         SecurityContextHolder.clearContext();
 
         return ResponseEntity.ok("회원탈퇴 성공");

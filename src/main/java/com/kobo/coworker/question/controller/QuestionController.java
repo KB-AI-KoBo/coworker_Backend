@@ -9,6 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import java.security.Principal;
 
 @RestController
 @RequestMapping("/api/questions")
@@ -23,11 +24,11 @@ public class QuestionController {
 
     @PostMapping(value = "/submit", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<AnalysisResultInfoDto> submitQuestion(
-            @RequestParam("email") String email,
+            Principal principal,
             @RequestPart(value = "file", required = false) MultipartFile file,
             @RequestPart("content") String content) {
 
-        AnalysisResultInfoDto result = questionService.handleQuestionSubmission(email, file, content);
+        AnalysisResultInfoDto result = questionService.handleQuestionSubmission(principal, file, content);
         return ResponseEntity.ok(result);
     }
 
