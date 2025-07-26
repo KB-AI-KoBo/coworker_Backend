@@ -13,20 +13,26 @@ public class AnalysisResult {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "analysis_id")
     private Long analysisId;
 
+    @Column(name = "question_id", nullable = true)
     private Long questionId;
 
-    @ManyToOne
-    @JoinColumn(nullable = true)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "document_id", nullable = true)
     private Document document;
 
+    @Column(length = 1000)
     private String content;
+
+    @Column(length = 1000)
     private String result;
+
     private int label;
 
     @Builder
-    public AnalysisResult(Long questionId,Document document, String content, String result, int label) {
+    public AnalysisResult(Long questionId, Document document, String content, String result, int label) {
         this.questionId = questionId;
         this.document = document;
         this.content = content;
