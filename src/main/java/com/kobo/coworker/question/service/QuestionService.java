@@ -19,6 +19,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.security.Principal;
+
 @Service
 @RequiredArgsConstructor
 public class QuestionService {
@@ -31,7 +33,8 @@ public class QuestionService {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Transactional
-    public AnalysisResultInfoDto handleQuestionSubmission(String email, MultipartFile file, String content) {
+    public AnalysisResultInfoDto handleQuestionSubmission(Principal principal, MultipartFile file, String content) {
+        String email = principal.getName();
         User user = userService.findUserWithUniqueEmail(email);
         Document document = handleFileUploadIfPresent(email, file);
         Question question = saveQuestion(user, document, content);
