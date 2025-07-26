@@ -32,9 +32,10 @@ public class QuestionService {
 
     @Transactional
     public AnalysisResultInfoDto handleQuestionSubmission(String email, MultipartFile file, String content) {
+        User user = userService.findUserWithUniqueEmail(email);
         Document document = handleFileUploadIfPresent(email, file);
-        saveQuestion(email, document, content);
-        return analyzeAndSaveResult(email, document, content);
+        Question question = saveQuestion(user, document, content);
+        return analyzeAndSaveResult(document, content, question.getId());
     }
 
     private Document handleFileUploadIfPresent(String email, MultipartFile file) {
@@ -45,15 +46,13 @@ public class QuestionService {
     }
 
     @Transactional
-    public void saveQuestion(String email, Document document, String content) {
-        User user = userService.findUserWithUniqueEmail(email);
-
+    public Question saveQuestion(User user, Document document, String content) {
         if (document != null) {
             documentService.validateDocumentFileUrlUniqueness(document.getFileUrl());
         }
 
         Question question = buildQuestion(user, document, content);
-        questionRepository.save(question);
+        return questionRepository.save(question);
     }
 
     private Question buildQuestion(User user, Document document, String content) {
@@ -65,13 +64,13 @@ public class QuestionService {
                 .toEntity();
     }
 
-    private AnalysisResultInfoDto analyzeAndSaveResult(String email, Document document, String content) {
-        String aiResponseJson = aiClient.analyzeQuestion(email, document, content);
-
+    private AnalysisResultInfoDto analyzeAndSaveResult(Document document, String content, Long questionId) {
+        String aiResponseJson = aiClient.analyzeQuestion(document, content);
         try {
             AnalysisResultInfoDto resultDto = objectMapper.readValue(aiResponseJson, AnalysisResultInfoDto.class);
             Long savedId = analysisService.save(resultDto);
             resultDto.setAnalysisId(savedId);
+            resultDto.setQuestionId(questionId);
             return resultDto;
         } catch (Exception e) {
             throw new GeneralException(ErrorStatus.AI_SERVER_COMMUNICATION_ERROR);

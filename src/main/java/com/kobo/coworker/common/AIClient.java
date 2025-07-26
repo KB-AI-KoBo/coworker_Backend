@@ -28,8 +28,8 @@ public class AIClient {
         this.aiServerUrl = aiServerUrl;
     }
 
-    public String analyzeQuestion(String email, Document document, String content) {
-        String requestBody = buildRequestBody(email, document, content);
+    public String analyzeQuestion(Document document, String content) {
+        String requestBody = buildRequestBody(document, content);
         URI uri = createUri();
         HttpRequest request = buildHttpRequest(uri, requestBody);
         HttpResponse<String> response = sendSafeRequest(request);
@@ -37,12 +37,11 @@ public class AIClient {
         return handleResponse(response);
     }
 
-    private String buildRequestBody(String email, Document file, String content) {
+    private String buildRequestBody(Document file, String content) {
         JSONObject json = new JSONObject();
-        json.put("email", email);
         if (ensureDocumentIsPresent(file)) {
             JSONObject document = new JSONObject();
-            document.put("originalFilename", file.getOriginalFilename());
+            document.put("originalFileName", file.getOriginalFilename());
             document.put("fileUrl", file.getFileUrl());
             json.put("document", document);
         }

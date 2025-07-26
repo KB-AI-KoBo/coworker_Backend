@@ -28,6 +28,11 @@ public class AnalysisController {
         return analysisService.findAnalysisResultsByDocumentId(documentId);
     }
 
+    @GetMapping("/question/{questionId}")
+    public List<AnalysisResultInfoDto> getAnalysisResultsByQuestion(@PathVariable Long questionId) {
+        return analysisService.findAnalysisResultsByQuestionId(questionId);
+    }
+
     @DeleteMapping("/{id}")
     public SuccessStatus deleteAnalysisResult(@PathVariable Long id) {
         analysisService.deleteById(id);
