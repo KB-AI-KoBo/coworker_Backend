@@ -15,6 +15,8 @@ public class AnalysisResult {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long analysisId;
 
+    private Long questionId;
+
     @ManyToOne
     @JoinColumn(nullable = true)
     private Document document;
@@ -24,7 +26,8 @@ public class AnalysisResult {
     private int label;
 
     @Builder
-    public AnalysisResult(Document document, String content, String result, int label) {
+    public AnalysisResult(Long questionId,Document document, String content, String result, int label) {
+        this.questionId = questionId;
         this.document = document;
         this.content = content;
         this.result = result;
