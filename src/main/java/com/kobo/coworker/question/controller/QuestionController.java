@@ -9,6 +9,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 
 @RestController
@@ -26,9 +28,10 @@ public class QuestionController {
     public ResponseEntity<AnalysisResultInfoDto> submitQuestion(
             Principal principal,
             @RequestPart(value = "file", required = false) MultipartFile file,
-            @RequestPart("content") String content) {
+            @RequestPart("content") String content,
+            HttpServletRequest request) {
 
-        AnalysisResultInfoDto result = questionService.handleQuestionSubmission(principal, file, content);
+        AnalysisResultInfoDto result = questionService.handleQuestionSubmission(principal, file, content, request);
         return ResponseEntity.ok(result);
     }
 
