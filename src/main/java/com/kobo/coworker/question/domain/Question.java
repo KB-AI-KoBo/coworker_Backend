@@ -22,7 +22,7 @@ public class Question {
     @JoinColumn(nullable = false)
     private User user;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 
     @Builder
