@@ -6,6 +6,7 @@ import com.kobo.coworker.analysis.service.AnalysisService;
 import com.kobo.coworker.common.AIClient;
 import com.kobo.coworker.common.apiPayload.code.status.ErrorStatus;
 import com.kobo.coworker.common.apiPayload.exception.GeneralException;
+import com.kobo.coworker.common.security.JwtUtils;
 import com.kobo.coworker.document.domain.Document;
 import com.kobo.coworker.document.dto.DocumentInfoDto;
 import com.kobo.coworker.document.service.DocumentService;
@@ -18,7 +19,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
+import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 
 @Service
@@ -33,12 +34,15 @@ public class QuestionService {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Transactional
-    public AnalysisResultInfoDto handleQuestionSubmission(Principal principal, MultipartFile file, String content) {
+    public AnalysisResultInfoDto handleQuestionSubmission(Principal principal, MultipartFile file, String content, HttpServletRequest request) {
         String email = principal.getName();
         User user = userService.findUserWithUniqueEmail(email);
         Document document = handleFileUploadIfPresent(email, file);
         Question question = saveQuestion(user, document, content);
-        return analyzeAndSaveResult(document, content, question.getId());
+
+        String jwtToken = JwtUtils.extractJwtToken(request);
+
+        return analyzeAndSaveResult(document, content, question.getId(), jwtToken);
     }
 
     private Document handleFileUploadIfPresent(String email, MultipartFile file) {
@@ -67,8 +71,8 @@ public class QuestionService {
                 .toEntity();
     }
 
-    private AnalysisResultInfoDto analyzeAndSaveResult(Document document, String content, Long questionId) {
-        String aiResponseJson = aiClient.analyzeQuestion(document, content);
+    private AnalysisResultInfoDto analyzeAndSaveResult(Document document, String content, Long questionId, String jwtToken) {
+        String aiResponseJson = aiClient.analyzeQuestion(document, content, jwtToken);
         try {
             AnalysisResultInfoDto resultDto = objectMapper.readValue(aiResponseJson, AnalysisResultInfoDto.class);
             Long savedId = analysisService.save(resultDto);

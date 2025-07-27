@@ -31,10 +31,10 @@ public class AIClient {
         this.aiServerUrl = aiServerUrl;
     }
 
-    public String analyzeQuestion(Document document, String content) {
+    public String analyzeQuestion(Document document, String content, String jwtToken) {
         String requestBody = buildRequestBody(document, content);
         URI uri = createUri();
-        HttpRequest request = buildHttpRequest(uri, requestBody);
+        HttpRequest request = buildHttpRequest(uri, requestBody, jwtToken);
         HttpResponse<String> response = sendSafeRequest(request, requestBody);
 
         return handleResponse(response);
@@ -67,10 +67,11 @@ public class AIClient {
         }
     }
 
-    private HttpRequest buildHttpRequest(URI uri, String body) {
+    private HttpRequest buildHttpRequest(URI uri, String body, String jwtToken) {
         return HttpRequest.newBuilder()
                 .uri(uri)
                 .header("Content-Type", "application/json")
+                .header("Authorization", "Bearer " + jwtToken)
                 .timeout(TIMEOUT)
                 .POST(HttpRequest.BodyPublishers.ofString(body))
                 .build();
